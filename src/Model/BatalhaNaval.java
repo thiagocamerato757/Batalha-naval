@@ -36,39 +36,64 @@ public class BatalhaNaval {
     }
 
     private static void inicializarTabuleiro(char[][] tabuleiro) {
-        for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
-            for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
-                tabuleiro[i][j] = '~'; // Água
-            }
-        }
-
-        // Posicionar navios
         Scanner scanner = new Scanner(System.in);
         for (int i = 0; i < NUM_NAVIOS; i++) {
-            System.out.println("Posicione o navio " + (i + 1) + " (formato: linha coluna):");
-            int linha = scanner.nextInt();
-            int coluna = scanner.nextInt();
-            if (linha < 0 || linha >= TAMANHO_TABULEIRO || coluna < 0 || coluna >= TAMANHO_TABULEIRO) {
-                System.out.println("Posição inválida. Tente novamente.");
-                i--; // Tenta novamente posicionar o mesmo navio
-            } else if (tabuleiro[linha][coluna] == 'N') {
-                System.out.println("Já existe um navio nesta posição. Tente novamente.");
-                i--; // Tenta novamente posicionar o mesmo navio
-            } else {
-                tabuleiro[linha][coluna] = 'N'; // Navio
+            boolean posicaoValida = false;
+            while (!posicaoValida) {
+                System.out.print("Posicione o navio " + (i + 1) + " (coordenada letra número), por exemplo, A3: ");
+                String coordenada = scanner.nextLine().toUpperCase(); // Converte para maiúsculas para tratamento consistente
+
+                if (coordenada.length() < 2 || coordenada.length() > 3) {
+                    System.out.println("Coordenada inválida. Tente novamente.");
+                    continue;
+                }
+
+                char letra = coordenada.charAt(0);
+                int linha = letra - 'A'; // Convertendo a letra para o índice da linha
+
+                if (linha < 0 || linha >= TAMANHO_TABULEIRO) {
+                    System.out.println("Coordenada inválida. Tente novamente.");
+                    continue;
+                }
+
+                int coluna;
+                try {
+                    coluna = Integer.parseInt(coordenada.substring(1)); // Extrai o número da coordenada
+                } catch (NumberFormatException e) {
+                    System.out.println("Coordenada inválida. Tente novamente.");
+                    continue;
+                }
+
+                coluna--; // Ajusta para começar do índice 0
+                if (coluna < 0 || coluna >= TAMANHO_TABULEIRO) {
+                    System.out.println("Coordenada inválida. Tente novamente.");
+                    continue;
+                }
+
+                if (tabuleiro[linha][coluna] == 'N') {
+                    System.out.println("Já existe um navio nesta posição. Tente novamente.");
+                } else {
+                    tabuleiro[linha][coluna] = 'N'; // Navio
+                    posicaoValida = true;
+                }
             }
         }
     }
 
     private static void exibirTabuleiro(char[][] tabuleiro) {
-        System.out.println("  0 1 2 3 4");
+        System.out.println("    0  1  2  3  4  5  6  7  8  9 10 11 12 13 14");
         for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
-            System.out.print(i + " ");
+            System.out.format("%c  ", (i + 'A'));
             for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
                 if (tabuleiro[i][j] == 'N') {
-                    System.out.print("~ "); // Água escondida
-                } else {
-                    System.out.print(tabuleiro[i][j] + " ");
+                	System.out.print(" ~ ");
+                } else if(tabuleiro[i][j] == 'X'){
+                    System.out.print(" X ");
+                   
+                }else if(tabuleiro[i][j] == 'O') {
+                	System.out.print(" O ");
+                }else {
+                	System.out.print(" ~ ");
                 }
             }
             System.out.println();
@@ -76,29 +101,58 @@ public class BatalhaNaval {
         System.out.println();
     }
 
+
+
     private static int realizarJogada(char[][] tabuleiro, int naviosRestantes) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Digite a linha: ");
-        int linha = scanner.nextInt();
-        System.out.print("Digite a coluna: ");
-        int coluna = scanner.nextInt();
+        boolean jogadaValida = false;
+        
+        while (!jogadaValida) {
+            System.out.print("Digite a coordenada (letra número), por exemplo, A3: ");
+            String coordenada = scanner.nextLine().toUpperCase(); // Converte para maiúsculas para tratamento consistente
 
-        if (linha < 0 || linha >= TAMANHO_TABULEIRO || coluna < 0 || coluna >= TAMANHO_TABULEIRO) {
-            System.out.println("Jogada inválida. Tente novamente.");
-            return naviosRestantes;
+            if (coordenada.length() < 2 || coordenada.length() > 3) {
+                System.out.println("Coordenada inválida. Tente novamente.");
+                continue;
+            }
+
+            char letra = coordenada.charAt(0);
+            int linha = letra - 'A'; // Convertendo a letra para o índice da linha
+
+            if (linha < 0 || linha >= TAMANHO_TABULEIRO) {
+                System.out.println("Coordenada inválida. Tente novamente.");
+                continue;
+            }
+
+            int coluna;
+            try {
+                coluna = Integer.parseInt(coordenada.substring(1)); // Extrai o número da coordenada
+            } catch (NumberFormatException e) {
+                System.out.println("Coordenada inválida. Tente novamente.");
+                continue;
+            }
+
+            coluna--; // Ajusta para começar do índice 0
+            if (coluna < 0 || coluna >= TAMANHO_TABULEIRO) {
+                System.out.println("Coordenada inválida. Tente novamente.");
+                continue;
+            }
+
+            jogadaValida = true;
+
+            if (tabuleiro[linha][coluna] == 'N') {
+                System.out.println("Você acertou um navio!");
+                tabuleiro[linha][coluna] = 'X'; // Marcador de acerto
+                naviosRestantes--;
+            } else if (tabuleiro[linha][coluna] == 'X' || tabuleiro[linha][coluna] == 'O') {
+                System.out.println("Você já tentou essa posição. Tente novamente.");
+                jogadaValida = false; // Permite que o jogador tente novamente na mesma jogada
+            } else {
+                System.out.println("Você errou.");
+                tabuleiro[linha][coluna] = 'O'; // Marcador de tentativa falha
+            }
         }
-
-        if (tabuleiro[linha][coluna] == 'N') {
-            System.out.println("Você acertou um navio!");
-            tabuleiro[linha][coluna] = 'X'; // Marcador de acerto
-            naviosRestantes--;
-        } else if (tabuleiro[linha][coluna] == 'X' || tabuleiro[linha][coluna] == 'O') {
-            System.out.println("Você já tentou essa posição. Tente novamente.");
-        } else {
-            System.out.println("Você errou otario.");
-            tabuleiro[linha][coluna] = 'O'; // Marcador de tentativa falha
-        }
-
+        
         exibirTabuleiro(tabuleiro);
         return naviosRestantes;
     }
