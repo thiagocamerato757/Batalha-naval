@@ -2,7 +2,7 @@ package Model;
 import java.util.Scanner;
 
 public class BatalhaNaval {
-    private static final int TAMANHO_TABULEIRO = 5;
+    private static final int TAMANHO_TABULEIRO = 15;
     private static final int NUM_NAVIOS = 3;
     private static final char[][] tabuleiro1 = new char[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
     private static final char[][] tabuleiro2 = new char[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
