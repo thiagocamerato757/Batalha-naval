@@ -95,7 +95,7 @@ public class BatalhaNaval {
         } else if (tabuleiro[linha][coluna] == 'X' || tabuleiro[linha][coluna] == 'O') {
             System.out.println("Você já tentou essa posição. Tente novamente.");
         } else {
-            System.out.println("Você errou.");
+            System.out.println("Você errou otario.");
             tabuleiro[linha][coluna] = 'O'; // Marcador de tentativa falha
         }
 
