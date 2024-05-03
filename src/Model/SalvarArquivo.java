@@ -18,11 +18,13 @@ public class SalvarArquivo{
 		arq.write("\n");
 		if (qtd_tiros1 != 0) {
 			for (int i =0; i<qtd_tiros1;i++) {
-				arq.write(tiros1[i]);
-				arq.write("\n");
+				if (tiros1[i] != null) {
+					arq.write(tiros1[i]);
+					arq.write("\n");
+				}
 			}
+			arq.write("\n");
 		}
-		arq.write("\n");
 		arq.write("Jogador 2\n");
 		if (navios2 != null) {
 			for (int i =0; i<5;i++) {
@@ -33,8 +35,10 @@ public class SalvarArquivo{
 		arq.write("\n");
 		if (qtd_tiros2 != 0) {
 			for (int i =0; i<qtd_tiros2;i++) {
-				arq.write(tiros2[i]);
-				arq.write("\n");
+				if (tiros2[i]!=null) {
+					arq.write(tiros2[i]);
+					arq.write("\n");
+				}
 			}
 		}
 		
@@ -53,25 +57,23 @@ public class SalvarArquivo{
 		for(int i = 0; i<num_navios; i++) {
 			s = arq.readLine();
 			navios1[i] = s;
-			System.out.println(navios1[i]);
 		}
 		int i =0;
 		s = arq.readLine(); // le "\n"
-		System.out.println(s);
-		while(arq.readLine() != "\n") { //nao ta funcionando
+		while(!s.equals("Jogador 2")) {
+			if(!s.isEmpty()) {
+				tiros1[i] = s;
+				i++;
+			}
 			s = arq.readLine();
-			tiros1[i] = s;
-			i++;
 		}
-		arq.readLine(); // le "\n"
 		for(i = 0; i<num_navios; i++) {
 			s = arq.readLine();
 			navios2[i] = s;
 		}
 		i = 0;
 		arq.readLine(); // le "\n"
-		while(arq.ready()) {
-			s = arq.readLine();
+		while((s = arq.readLine()) != null) {
 			tiros2[i] = s;
 			i++;
 		}

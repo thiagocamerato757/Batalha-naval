@@ -11,8 +11,8 @@ public class BatalhaNaval {
     private static String[] navios2 = new String[NUM_NAVIOS];
     private static String[] tiros1 = new String[225];
     private static String[] tiros2 = new String[225];
-    private static int qtd_tiros1;
-    private static int qtd_tiros2;
+    private static int qtd_tiros1 = 0;
+    private static int qtd_tiros2 = 0;
     private static int naviosRestantes1 = NUM_NAVIOS;
     private static int naviosRestantes2 = NUM_NAVIOS;
 
@@ -130,11 +130,11 @@ public class BatalhaNaval {
             System.out.print("Digite a coordenada (letra número), por exemplo, A3: ");
             String coordenada = scanner.nextLine().toUpperCase(); // Converte para maiúsculas para tratamento consistente
             if (tabuleiro == tabuleiro2) {
-            	tiros1[i] = coordenada;
+            	tiros1[qtd_tiros1] = coordenada;
             	qtd_tiros1++;
             }
             else {
-            	tiros2[i] = coordenada;
+            	tiros2[qtd_tiros2] = coordenada;
             	qtd_tiros2++;
             }
             
