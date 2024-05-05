@@ -25,18 +25,18 @@ public class BatalhaNaval {
         inicializarTabuleiro(tabuleiro2);
         exibirTabuleiro(tabuleiro2);
         
-        SalvarArquivo.EscreverArq(navios1,tiros1,qtd_tiros1,navios2,tiros2,qtd_tiros2);
+        SalvarArquivo salva = new SalvarArquivo();
 
         while (naviosRestantes1 > 0 && naviosRestantes2 > 0) {
             System.out.println("Vez do Jogador 1:");
             naviosRestantes2 = realizarJogada(tabuleiro2, naviosRestantes2);
-            SalvarArquivo.EscreverArq(navios1,tiros1,qtd_tiros1,navios2,tiros2,qtd_tiros2);
+            salva.EscreverArq();
             System.out.println("\nNavios restantes do Jogador 2: " + naviosRestantes2);
             if(naviosRestantes2 == 0) break;
             System.out.println("Vez do Jogador 2:");
             naviosRestantes1 = realizarJogada(tabuleiro1, naviosRestantes1);
-            SalvarArquivo.EscreverArq(navios1,tiros1,qtd_tiros1,navios2,tiros2,qtd_tiros2);
-            SalvarArquivo.LerArq();
+            salva.EscreverArq();
+            salva.LerArq();
             System.out.println("\nNavios restantes do Jogador 1: " + naviosRestantes1);
         }
         
@@ -184,5 +184,53 @@ public class BatalhaNaval {
         exibirTabuleiro(tabuleiro);
         return naviosRestantes;
     }
+
+	public static String[] getNavios1() {
+		return navios1;
+	}
+
+	public static void setNavios1(String[] navios1) {
+		BatalhaNaval.navios1 = navios1;
+	}
+
+	public static String[] getNavios2() {
+		return navios2;
+	}
+
+	public static void setNavios2(String[] navios2) {
+		BatalhaNaval.navios2 = navios2;
+	}
+
+	public static String[] getTiros1() {
+		return tiros1;
+	}
+
+	public static void setTiros1(String[] tiros1) {
+		BatalhaNaval.tiros1 = tiros1;
+	}
+
+	public static String[] getTiros2() {
+		return tiros2;
+	}
+
+	public static void setTiros2(String[] tiros2) {
+		BatalhaNaval.tiros2 = tiros2;
+	}
+
+	public static int getQtd_tiros1() {
+		return qtd_tiros1;
+	}
+
+	public static void setQtd_tiros1(int qtd_tiros1) {
+		BatalhaNaval.qtd_tiros1 = qtd_tiros1;
+	}
+
+	public static int getQtd_tiros2() {
+		return qtd_tiros2;
+	}
+
+	public static void setQtd_tiros2(int qtd_tiros2) {
+		BatalhaNaval.qtd_tiros2 = qtd_tiros2;
+	}
 }
 
