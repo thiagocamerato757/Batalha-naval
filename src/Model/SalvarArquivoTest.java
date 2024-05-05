@@ -47,7 +47,7 @@ public class SalvarArquivoTest {
             String[] navios2 = salvou.getNavios2();
             String[] tiros2 = salvou.getTiros2();
             
-            // Assertions to verify if data read from the file is correct
+            // Assertions para verificar se o dado lido esta correto
             assertEquals("A1", navios1[0]);
             assertEquals("B2", navios1[1]);
             assertEquals("C3", navios1[2]);
