@@ -1,13 +1,16 @@
 package Model;
 
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.*; 
 import Model.BatalhaNaval;
+import Model.SalvarArquivo;
+
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
 
 public class SalvarArquivoTest {
-
+	
     @Test
     public void testEscreverArq() {
     	BatalhaNaval batalhanaval = new BatalhaNaval();
