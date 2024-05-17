@@ -9,7 +9,7 @@ public class PrimFrame extends JFrame {
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize(); // Tamanho inteiro da tela
     public final int LARG_DEFAULT = d.width;
     public final int ALT_DEFAULT = d.height;
-    public final int CELULA_SIZE = 40; // Tamanho de cada celula do tabuleiro
+    public final int CELULA_SIZE = 30; // Tamanho de cada celula do tabuleiro
     public final int NUMERO_COLUNAS = 16;
     public final int NUMERO_LINHAS = 16;
 
