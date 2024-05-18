@@ -3,66 +3,53 @@ package Model;
 import java.io.*;
 
 public class SalvarArquivo{
-	    private String[] navios1;
-	    private String[] tiros1;
-	    private int qtd_tiros1;
-	    private String[] navios2;
-	    private String[] tiros2;
-	    private int qtd_tiros2;
-
-	    // Getters e Setters
-	    public String[] getNavios1() {
-	        return navios1;
-	    }
-
-	    public void setNavios1(String[] navios1) {
-	        this.navios1 = navios1;
-	    }
-
-	    public String[] getTiros1() {
-	        return tiros1;
-	    }
-
-	    public void setTiros1(String[] tiros1) {
-	        this.tiros1 = tiros1;
-	    }
-
-	    public int getQtdTiros1() {
-	        return qtd_tiros1;
-	    }
-
-	    public void setQtdTiros1(int qtd_tiros1) {
-	        this.qtd_tiros1 = qtd_tiros1;
-	    }
-
-	    public String[] getNavios2() {
-	        return navios2;
-	    }
-
-	    public void setNavios2(String[] navios2) {
-	        this.navios2 = navios2;
-	    }
-
-	    public String[] getTiros2() {
-	        return tiros2;
-	    }
-
-	    public void setTiros2(String[] tiros2) {
-	        this.tiros2 = tiros2;
-	    }
-
-	    public int getQtdTiros2() {
-	        return qtd_tiros2;
-	    }
-
-	    public void setQtdTiros2(int qtd_tiros2) {
-	        this.qtd_tiros2 = qtd_tiros2;
-	    }
-
-	    // Método para escrever os dados no arquivo
-	    
-	    
-	    public void EscreverArq() throws IOException {
+    private String[] navios1;
+    private String[] tiros1;
+    private int qtd_tiros1;
+    private String[] navios2;
+    private String[] tiros2;
+    private int qtd_tiros2;
+    
+	// Getters e Setters
+    public String[] getNavios1() {
+        return navios1;
+    }
+    public void setNavios1(String[] navios1) {
+        this.navios1 = navios1;
+    }
+    public String[] getTiros1() {
+        return tiros1;
+    }
+    public void setTiros1(String[] tiros1) {
+        this.tiros1 = tiros1;
+    }
+    public int getQtdTiros1() {
+        return qtd_tiros1;
+    }
+    public void setQtdTiros1(int qtd_tiros1) {
+        this.qtd_tiros1 = qtd_tiros1;
+    }
+    public String[] getNavios2() {
+        return navios2;
+    }
+    public void setNavios2(String[] navios2) {
+        this.navios2 = navios2;
+   }
+    public String[] getTiros2() {
+        return tiros2;
+    }
+    public void setTiros2(String[] tiros2) {
+        this.tiros2 = tiros2;
+    }
+    public int getQtdTiros2() {
+        return qtd_tiros2;
+    }
+    public void setQtdTiros2(int qtd_tiros2) {
+        this.qtd_tiros2 = qtd_tiros2;
+    }
+    
+    // Método para escrever os dados no arquivo
+	public void EscreverArq() throws IOException {
 		PrintWriter arq = null;
 		navios1 = BatalhaNaval.getNavios1();
 		navios2 = BatalhaNaval.getNavios2();
@@ -110,7 +97,7 @@ public class SalvarArquivo{
 		arq.close();
 	}
 	
-	public  void LerArq() throws IOException{
+	public void LerArq() throws IOException{
 		BufferedReader arq = new BufferedReader(new FileReader("dados_partida.txt"));
 		int num_navios = 5;
 	    setNavios1(new String[num_navios]);
