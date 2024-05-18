@@ -11,17 +11,17 @@ public class NavioTest {
 	@Test
 	public void testTipo() {
 		Navio teste1 = new Navio(1);
-		Navio.TipoNavio(teste1);
+		Navio.setTipoNavio(teste1);
 		Navio teste2 = new Navio(2);
-		Navio.TipoNavio(teste2);
+		Navio.setTipoNavio(teste2);
 		Navio teste3 = new Navio(3);
-		Navio.TipoNavio(teste3);
-		Navio teste4 = new Navio(4);
-		Navio.TipoNavio(teste4);
+		Navio.setTipoNavio(teste3);
+		Navio teste4 = new Navio(4); 
+		Navio.setTipoNavio(teste4);
 		Navio teste5 = new Navio(5);
-		Navio.TipoNavio(teste5);
+		Navio.setTipoNavio(teste5);
 		Navio teste6 = new Navio(0);//testa caso tenha tamanho fora do escopo
-		Navio.TipoNavio(teste6);
+		Navio.setTipoNavio(teste6);
 		assertEquals("submarino",teste1.getTipo());
 		assertEquals("destroyer",teste2.getTipo());
 		assertEquals("hidroaviao",teste3.getTipo());

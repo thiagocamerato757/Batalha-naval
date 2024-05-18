@@ -11,7 +11,7 @@ public class Jogo {
 		String jogador2 = nome.getJogador2();
 		
 		PrimFrame f = new PrimFrame("Batalha naval");
-		f.setNomeJogador(jogador1);
+		f.setNomeJogador(jogador1); 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
         
