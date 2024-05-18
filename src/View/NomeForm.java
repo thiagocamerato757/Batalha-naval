@@ -5,7 +5,23 @@ public class NomeForm {
     private String jogador1;
     private String jogador2;
 
-    public NomeForm() {
+    public String getJogador1() {
+		return jogador1;
+	}
+
+	public void setJogador1(String jogador1) {
+		this.jogador1 = jogador1;
+	}
+
+	public String getJogador2() {
+		return jogador2;
+	}
+
+	public void setJogador2(String jogador2) {
+		this.jogador2 = jogador2;
+	}
+
+	public NomeForm() {
         iniciarPartida();
     }
 
@@ -21,10 +37,7 @@ public class NomeForm {
         if (jogador2 == null || jogador2.isEmpty()) { //caso clique somente no ok o nome por padrão vai ser jogador 2
             jogador2 = "Jogador 2";
         }
-
-        // Exibir os nomes dos jogadores
-        System.out.println("Jogador 1: " + jogador1);
-        System.out.println("Jogador 2: " + jogador2);
+        
     }
 
     public static void main(String[] args) {

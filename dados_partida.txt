@@ -1,0 +1,26 @@
+<<<<<<< HEAD
+=======
+Jogador 1
+A1
+B2
+C3
+D4
+E5
+
+A1
+B2
+C3
+
+Jogador 2
+F6
+G7
+H8
+I9
+J10
+
+F6
+G7
+H8
+I9
+J10
+>>>>>>> branch 'main' of https://github.com/thiagocamerato757/Batalha-Naval

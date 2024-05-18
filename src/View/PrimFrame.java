@@ -9,11 +9,16 @@ public class PrimFrame extends JFrame {
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize(); // Tamanho inteiro da tela
     public final int LARG_DEFAULT = d.width;
     public final int ALT_DEFAULT = d.height;
-    public final int CELULA_SIZE = 40; // Tamanho de cada celula do tabuleiro
+    public final int CELULA_SIZE = 30; // Tamanho de cada celula do tabuleiro
     public final int NUMERO_COLUNAS = 16;
     public final int NUMERO_LINHAS = 16;
+    String nomeJogador;
 
-    public PrimFrame(String s) {
+    public void setNomeJogador(String nomeJogador) {
+		this.nomeJogador = nomeJogador;
+	}
+
+	public PrimFrame(String s) {
         super(s);
 
         // Calculando o tamanho da janela com base no tamanho do tabuleiro
@@ -25,21 +30,29 @@ public class PrimFrame extends JFrame {
         getContentPane().add(new PrimPanel());
     }
 
-    public static void main(String[] args) {
-        PrimFrame f = new PrimFrame("Batalha naval");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-    }
+    //public static void main(String[] args) {
+        //PrimFrame f = new PrimFrame("Batalha naval");
+        //f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //f.setVisible(true);
+    //}
 
     class PrimPanel extends JPanel {
+        
+        JButton b1 = new JButton("Ok");
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             Graphics2D g2d = (Graphics2D) g;
             int right_x = LARG_DEFAULT/2; // para o tabuleiro ficar na direita da tela
-            int down_y = ALT_DEFAULT/8; // como foi especificado pelo ivan
+            int down_y = ALT_DEFAULT/7; // como foi especificado pelo ivan
             
+            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+            g2d.drawString(nomeJogador + " posicione suas armas", (LARG_DEFAULT/2)-50, ALT_DEFAULT-200);
+            
+            b1.setBounds(LARG_DEFAULT/2, ALT_DEFAULT-180,80,30);
+            add(b1);
+            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 15));
             // Desenhar o tabuleiro
             for (int row = 0; row < NUMERO_LINHAS; row++) {
                 for (int col = 0; col < NUMERO_COLUNAS; col++) {
@@ -75,53 +88,62 @@ public class PrimFrame extends JFrame {
             }
             
             // Desenhar os navios
-            // solucoes burras, vou refazer isso depois quando conseguir pensar
-            // cores tambem vao ser mudadas
-            // - ana
             for (int i = 0; i < 14; i++) {
             	for (int j = 0; j < 19; j++){
-            		int x = 40 + (j * CELULA_SIZE); // +40 para nao ficar colado na esquerda
-                    int y = down_y + 20 + (i * CELULA_SIZE); // +20 para ficar alinhado com o tabuleiro
+            		int x = 30 + (j * CELULA_SIZE); // +40 para nao ficar colado na esquerda
+                    int y = down_y + 30 + (i * CELULA_SIZE); // +20 para ficar alinhado com o tabuleiro
 
                     if (i == 0 && (j == 1 || j == 5 || j == 9 || j == 13 || j == 17)) {
                     	Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.GREEN);
+                        g2d.setColor(Color.green.darker());
                         g2d.fill(cell);
+                        g2d.setColor(Color.black);
+                        g2d.draw(cell);
                     }
                     
                     if (i == 1 && j % 2 == 0) {
                 		Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.GREEN);
+                        g2d.setColor(Color.green.darker());
                         g2d.fill(cell);
+                        g2d.setColor(Color.black);
+                        g2d.draw(cell);
                 	}
                     
                     if (i == 4 && j % 2 == 0 && j < 7) {
                     	Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.BLUE);
+                        g2d.setColor(Color.blue);
                         g2d.fill(cell);
+                        g2d.setColor(Color.black);
+                        g2d.draw(cell);
                     }
                     
                     if (i == 7 && (j == 0 || j == 1 || j == 3 || j == 4 || j == 6 || j == 7)) {
                     	Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.YELLOW);
+                        g2d.setColor(Color.yellow);
                         g2d.fill(cell);
+                        g2d.setColor(Color.black);
+                        g2d.draw(cell);
                     }
                     
                     if (i == 10 && j != 4 && j < 9) {
                     	Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.ORANGE);
+                        g2d.setColor(Color.orange);
                         g2d.fill(cell);
+                        g2d.setColor(Color.black);
+                        g2d.draw(cell);
                     }
                     
                     if (i == 13 && j < 5) {
                     	Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.BLACK);
+                        g2d.setColor(Color.orange.darker().darker().darker());
                         g2d.fill(cell);
+                        g2d.setColor(Color.black);
+                        g2d.draw(cell);
                     }
             	}
             }
         }
-
+        
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(LARG_DEFAULT, ALT_DEFAULT);
