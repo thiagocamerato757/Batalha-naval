@@ -2,6 +2,8 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -83,7 +85,7 @@ public class PrimFrame extends JFrame {
     }
 
     class PrimPanel extends JPanel {
-        JButton b1 = new JButton("Ok");
+        JButton b1 = new JButton("Confirmar");
         int right_x = LARG_DEFAULT / 2;
         int X = LARG_DEFAULT / 7;
         int Y = ALT_DEFAULT / 7;
@@ -112,17 +114,13 @@ public class PrimFrame extends JFrame {
         	for(int i = 0; i < 1; i++) {
         		ships.add(new Navio(5)); // Couraçado
         	}
-//            ships.add(new Navio(2)); // Destroyer
-//            ships.add(new Navio(3)); // Hidroavião
-//            ships.add(new Navio(4)); // Cruzador
-//            ships.add(new Navio(5)); // Couraçado
             int espaco = 60;
             int total = 1;
           
             int j = 0;
             for (int i = 0; i < ships.size(); i++) {
                 Navio ship = ships.get(i);
-                if(ship.getTamanho()== 3 && j != 0) {// para abrir 
+                if(ship.getTamanho() == 3 && j != 0) {// para abrir 
                 	X += espaco+(CELULA_SIZE * 2);
                 }else {
                 	X = 30 +(j*CELULA_SIZE * 2);
@@ -131,7 +129,7 @@ public class PrimFrame extends JFrame {
                 j++;
                 if(total == 4 || total == 7 || total == 12 || total == 14 || total == 15) {
                 	if(total !=15) {
-                		Y +=60*ships.get(i+1).getTamanho();
+                		Y += 40*ships.get(i+1).getTamanho();
                     	X = 30;
                     	j = 0 ;
                 	}
@@ -147,7 +145,16 @@ public class PrimFrame extends JFrame {
 
             g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
             g2d.drawString(nomeJogador + " posicione suas armas", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
-
+            
+            b1.setBounds(LARG_DEFAULT / 2, ALT_DEFAULT - 180, 100, 30);
+            add(b1);
+            b1.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PrimFrame.this.dispose();
+                }
+            });
+            
             g2d.setFont(new Font("TimesRoman", Font.PLAIN, 15));
             for (int row = 0; row < NUMERO_LINHAS; row++) {
                 for (int col = 0; col < NUMERO_COLUNAS; col++) {
