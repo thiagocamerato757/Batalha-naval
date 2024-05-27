@@ -2,10 +2,7 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -14,6 +11,7 @@ import Model.Navio;
 public class PrimFrame extends JFrame {
     private ArrayList<Navio> ships = new ArrayList<>();
     private Navio selectedShip = null;
+    private Navio pendingShip = null;
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
     public final int LARG_DEFAULT = d.width;
     public final int ALT_DEFAULT = d.height;
@@ -36,10 +34,12 @@ public class PrimFrame extends JFrame {
             public void mousePressed(MouseEvent e) {
                 Point p = e.getPoint();
 
-                for (Navio ship : ships) {
-                    if (ship.getShape().contains(p)) {
-                        selectedShip = ship;
-                        return;
+                if (pendingShip == null) {
+                    for (Navio ship : ships) {
+                        if (!ship.isConfirmed() && ship.getShape().contains(p)) {
+                            selectedShip = ship;
+                            return;
+                        }
                     }
                 }
 
@@ -51,14 +51,30 @@ public class PrimFrame extends JFrame {
                         double newX = panel.right_x + col * CELULA_SIZE;
                         double newY = panel.down_y + row * CELULA_SIZE;
                         if (!isOverlapping(newX, newY, selectedShip)) {
-                            selectedShip.setPosition(newX, newY);
-                            selectedShip = null;
+                            pendingShip = selectedShip;
+                            pendingShip.setPosition(newX, newY);
                             panel.repaint();
                         }
                     }
                 }
             }
         });
+
+        panel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    if (pendingShip != null) {
+                        pendingShip.setConfirmed(true);
+                        selectedShip = null;
+                        pendingShip = null;
+                        panel.repaint();
+                    }
+                }
+            }
+        });
+        panel.setFocusable(true);
+        panel.requestFocusInWindow();
     }
 
     private boolean isOverlapping(double x, double y, Navio ship) {
@@ -83,6 +99,15 @@ public class PrimFrame extends JFrame {
         }
         return null;
     }
+    
+    private boolean areAllShipsConfirmed() {
+        for (Navio ship : ships) {
+            if (!ship.isConfirmed()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     class PrimPanel extends JPanel {
         JButton b1 = new JButton("Confirmar");
@@ -99,40 +124,40 @@ public class PrimFrame extends JFrame {
         }
 
         private void initShips() {
-        	for(int i = 0; i < 4; i++) {
-        		ships.add(new Navio(1)); // Submarino
-        	}
-        	for(int i = 0; i < 3; i++) {
-        		ships.add(new Navio(2)); // Destroyer
-        	}
-        	for(int i = 0; i < 5; i++) {
-        		ships.add(new Navio(3)); // Hidroavião
-        	}
-        	for(int i = 0; i < 2; i++) {
-        		ships.add(new Navio(4)); // Cruzador
-        	}
-        	for(int i = 0; i < 1; i++) {
-        		ships.add(new Navio(5)); // Couraçado
-        	}
+            for (int i = 0; i < 4; i++) {
+                ships.add(new Navio(1)); // Submarino
+            }
+            for (int i = 0; i < 3; i++) {
+                ships.add(new Navio(2)); // Destroyer
+            }
+            for (int i = 0; i < 5; i++) {
+                ships.add(new Navio(3)); // Hidroavião
+            }
+            for (int i = 0; i < 2; i++) {
+                ships.add(new Navio(4)); // Cruzador
+            }
+            for (int i = 0; i < 1; i++) {
+                ships.add(new Navio(5)); // Couraçado
+            }
             int espaco = 60;
             int total = 1;
-          
+
             int j = 0;
             for (int i = 0; i < ships.size(); i++) {
                 Navio ship = ships.get(i);
-                if(ship.getTamanho() == 3 && j != 0) {// para abrir 
-                	X += espaco+(CELULA_SIZE * 2);
-                }else {
-                	X = 30 +(j*CELULA_SIZE * 2);
+                if (ship.getTamanho() == 3 && j != 0) { // para abrir
+                    X += espaco + (CELULA_SIZE * 2);
+                } else {
+                    X = 30 + (j * CELULA_SIZE * 2);
                 }
                 ship.setPosition(X, Y + 30);
                 j++;
-                if(total == 4 || total == 7 || total == 12 || total == 14 || total == 15) {
-                	if(total !=15) {
-                		Y += 40*ships.get(i+1).getTamanho();
-                    	X = 30;
-                    	j = 0 ;
-                	}
+                if (total == 4 || total == 7 || total == 12 || total == 14 || total == 15) {
+                    if (total != 15) {
+                        Y += 40 * ships.get(i + 1).getTamanho();
+                        X = 30;
+                        j = 0;
+                    }
                 }
                 total++;
             }
@@ -145,16 +170,20 @@ public class PrimFrame extends JFrame {
 
             g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
             g2d.drawString(nomeJogador + " posicione suas armas", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
-            
+
             b1.setBounds(LARG_DEFAULT / 2, ALT_DEFAULT - 180, 100, 30);
             add(b1);
             b1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    PrimFrame.this.dispose();
+                    if (areAllShipsConfirmed()) {
+                        PrimFrame.this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(PrimFrame.this, "Posicione todas as armas antes de confirmar!");
+                    }
                 }
             });
-            
+
             g2d.setFont(new Font("TimesRoman", Font.PLAIN, 15));
             for (int row = 0; row < NUMERO_LINHAS; row++) {
                 for (int col = 0; col < NUMERO_COLUNAS; col++) {
@@ -187,11 +216,6 @@ public class PrimFrame extends JFrame {
                 g2d.setColor(Color.BLACK);
                 g2d.draw(ship.getShape());
             }
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(LARG_DEFAULT, ALT_DEFAULT);
         }
     }
 

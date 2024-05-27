@@ -10,6 +10,7 @@ public class Navio {
     private String tipo;
     private Color cor;
     private Shape shape;
+    private boolean confirmed = false;
 
     public enum TipodeNavio {
         submarino,
@@ -104,4 +105,13 @@ public class Navio {
         }
         nav.setTipo(nome.toString());
     }
+
+
+public boolean isConfirmed() { 
+    return confirmed;
+}
+
+public void setConfirmed(boolean confirmed) { 
+    this.confirmed = confirmed;
+}
 }
