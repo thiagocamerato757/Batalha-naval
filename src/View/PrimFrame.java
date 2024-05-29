@@ -75,14 +75,17 @@ public class PrimFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    if (pendingShip != null && pendingShip.getCor() != Color.RED) {
-                        pendingShip.setConfirmed(true);
+                    if (selectedShip != null && pendingShip == null) {
+                        selectedShip = null; // Desmarca a seleção do navio se ESC for pressionado sem clicar no tabuleiro
+                    } else if (pendingShip != null) {
+                        if (pendingShip.getCor() != Color.RED) {
+                            pendingShip.setConfirmed(true);// Trava o navio na posição em que esta
+                        } else {
+                            JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma.");
+                        }
                         selectedShip = null;
                         pendingShip = null;
                         panel.repaint();
-                    }
-                    else {
-                    	JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma.");
                     }
                 }
             }
