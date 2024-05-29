@@ -76,7 +76,7 @@ public class Navio {
         switch (tam) {
             case 1:
                 nome = tipos[0];
-                nav.setCor(Color.GREEN);
+                nav.setCor(Color.GREEN.darker());
                 nav.setShape(new Rectangle2D.Double());
                 break;
             case 2:
@@ -96,7 +96,7 @@ public class Navio {
                 break;
             case 5:
                 nome = tipos[4];
-                nav.setCor(Color.RED);
+                nav.setCor(new Color(139, 69, 19));
                 nav.setShape(new Rectangle2D.Double());
                 break;
             default:
