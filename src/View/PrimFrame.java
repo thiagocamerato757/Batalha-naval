@@ -42,6 +42,7 @@ public class PrimFrame extends JFrame {
                         if (!ship.isConfirmed() && ship.getShape().contains(p)) {
                             selectedShip = ship;
                             originalColor = ship.getCor();
+                            //System.out.println(originalColor);
                             return;
                         }
                     }
@@ -78,10 +79,14 @@ public class PrimFrame extends JFrame {
                     if (selectedShip != null && pendingShip == null) {
                         selectedShip = null; // Desmarca a seleção do navio se ESC for pressionado sem clicar no tabuleiro
                     } else if (pendingShip != null) {
-                        if (pendingShip.getCor() != Color.RED) {
+                        if (pendingShip.getCor() != Color.RED ) {
                             pendingShip.setConfirmed(true);// Trava o navio na posição em que esta
                         } else {
                             JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma.");
+                        }
+                        
+                        if(selectedShip != null) {
+                        	selectedShip.setCor(originalColor);
                         }
                         selectedShip = null;
                         pendingShip = null;
@@ -99,6 +104,11 @@ public class PrimFrame extends JFrame {
             return false;
         }
 
+        // Verificar se o navio é um hidroavião (tamanho 3) e está na primeira linha
+        if (ship.getTamanho() == 3 && row == 1) {
+            return false;
+        }
+
         double newX = panel.right_x + col * CELULA_SIZE;
         double newY = panel.down_y + row * CELULA_SIZE;
         Shape newShape = createShapeAtPosition(newX, newY, ship);
@@ -113,6 +123,7 @@ public class PrimFrame extends JFrame {
 
         return true;
     }
+
     
 
     private boolean shapesOverlap(Shape s1, Shape s2) {
