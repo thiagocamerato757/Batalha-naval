@@ -7,9 +7,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import Model.Navio;
+import java.util.List;
 
 public class PrimFrame extends JFrame {
     private ArrayList<Navio> ships = new ArrayList<>();
+    private List<Point>cells = new ArrayList<>();
     private Navio selectedShip = null;
     private Navio pendingShip = null;
     private Color originalColor = null;
@@ -95,8 +97,23 @@ public class PrimFrame extends JFrame {
                 }
             }
         });
-        panel.setFocusable(true);
+        panel.setFocusable(true); 
         panel.requestFocusInWindow();     
+    }
+    private List<Point> getShipCells(double x, double y, Navio ship) {
+        int tamanho = ship.getTamanho();
+
+        if (ship.getShape() instanceof Rectangle2D.Double) {
+            for (int i = 0; i < tamanho; i++) {
+                this.cells.add(new Point((int) (x / CELULA_SIZE), (int) ((y + i * CELULA_SIZE) / CELULA_SIZE)));
+            }
+        } else if (ship.getShape() instanceof Path2D.Double) {
+            this.cells.add(new Point((int) (x / CELULA_SIZE), (int) (y / CELULA_SIZE)));
+            this.cells.add(new Point((int) ((x + CELULA_SIZE) / CELULA_SIZE), (int) ((y - CELULA_SIZE) / CELULA_SIZE)));
+            this.cells.add(new Point((int) ((x + 2 * CELULA_SIZE) / CELULA_SIZE), (int) (y / CELULA_SIZE)));
+        }
+
+        return cells;
     }
     
     private boolean isValidPosition(int col, int row, Navio ship) {
@@ -112,7 +129,11 @@ public class PrimFrame extends JFrame {
         double newX = panel.right_x + col * CELULA_SIZE;
         double newY = panel.down_y + row * CELULA_SIZE;
         Shape newShape = createShapeAtPosition(newX, newY, ship);
-
+        cells = getShipCells(newX,newY,ship); // num sei 
+        System.out.println(ship.getTipo());
+        System.out.println(cells);
+        ship.setCoordenadas(cells);
+        cells.clear();
         for (Navio otherShip : ships) {
             if (otherShip != ship) {
                 if (shapesOverlap(newShape, otherShip.getShape()) || shapesAdjacent(newShape, otherShip.getShape())) {
@@ -280,6 +301,7 @@ public class PrimFrame extends JFrame {
             }
 
             for (Navio ship : ships) {
+            	
             	g2d.setColor(ship.getCor());
                 g2d.fill(ship.getShape());
                 g2d.setColor(Color.BLACK);

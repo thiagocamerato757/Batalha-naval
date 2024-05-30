@@ -1,8 +1,11 @@
 package Model;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.geom.Path2D;
 
 public class Navio {
@@ -11,8 +14,18 @@ public class Navio {
     private Color cor;
     private Shape shape;
     private boolean confirmed = false;
+    private List<Point> coordenadas = new ArrayList<>();
 
-    public enum TipodeNavio {
+    public List<Point> getCoordenadas() {
+		return coordenadas;
+	}
+
+	public void setCoordenadas(List<Point> coordenadas) {
+		this.coordenadas = coordenadas;
+	}
+
+
+	public enum TipodeNavio {
         submarino,
         destroyer,
         hidroaviao,
