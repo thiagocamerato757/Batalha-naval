@@ -38,7 +38,15 @@ public class PrimFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 Point p = e.getPoint();
-
+                
+                if(SwingUtilities.isRightMouseButton(e)) {
+                	if(selectedShip != null && !selectedShip.isConfirmed()){
+                		selectedShip.rotate();
+                		panel.repaint();
+                	}
+                	
+                }
+                
                 if (pendingShip == null) {
                     for (Navio ship : ships) {
                         if (!ship.isConfirmed() && ship.getShape().contains(p)) {
@@ -78,21 +86,17 @@ public class PrimFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    if (selectedShip != null && pendingShip == null) {
-                        selectedShip = null; // Desmarca a seleção do navio se ESC for pressionado sem clicar no tabuleiro
-                    } else if (pendingShip != null) {
-                        if (pendingShip.getCor() != Color.RED ) {
-                            pendingShip.setConfirmed(true);// Trava o navio na posição em que esta
-                        } else {
-                            JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma.");
-                        }
-                        
-                        if(selectedShip != null) {
-                        	selectedShip.setCor(originalColor);
-                        }
+                    if(pendingShip != null && pendingShip.getCor() != Color.red) {
+                    	pendingShip.setConfirmed(true);
                         selectedShip = null;
                         pendingShip = null;
                         panel.repaint();
+                    }
+                    else if(selectedShip != null && pendingShip == null) {
+                    	selectedShip = null;
+                    }
+                    else {
+                    	JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma");
                     }
                 }
             }

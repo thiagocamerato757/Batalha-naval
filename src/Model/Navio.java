@@ -6,6 +6,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 
 public class Navio {
@@ -15,6 +16,7 @@ public class Navio {
     private Shape shape;
     private boolean confirmed = false;
     private List<Point> coordenadas = new ArrayList<>();
+    private int countRotation = 0;
 
     public List<Point> getCoordenadas() {
 		return coordenadas;
@@ -71,15 +73,59 @@ public class Navio {
     }
 
     public void setPosition(double x, double y) {
-        if (shape instanceof Rectangle2D.Double) {
-            ((Rectangle2D.Double) shape).setRect(x, y, 30, 30 * this.tamanho);
-        } else if (shape instanceof Path2D.Double) {
-            Path2D.Double compoundShape = new Path2D.Double();
-            compoundShape.append(new Rectangle2D.Double(x, y, 30, 30), false);
-            compoundShape.append(new Rectangle2D.Double(x + 30, y - 30, 30, 30), false);
-            compoundShape.append(new Rectangle2D.Double(x + 60, y, 30, 30), false);
-            this.shape = compoundShape;
-        }
+	        if (shape instanceof Rectangle2D.Double) {
+	        	switch (countRotation) {
+	        		case 0:
+	        			((Rectangle2D.Double) shape).setRect(x, y, 30, 30 * this.tamanho);
+	        			break;
+	        		case 1:
+	        			((Rectangle2D.Double) shape).setRect(x, y, 30  * this.tamanho, 30);
+	        			break;
+	        		case 2:
+	        			((Rectangle2D.Double) shape).setRect(x, y - 30 * (this.tamanho - 1), 30, 30  * this.tamanho);
+	        			break;
+	        		case 3:
+	        			((Rectangle2D.Double) shape).setRect(x - 30 * (this.tamanho - 1), y, 30  * this.tamanho, 30);
+	        			break;
+	        	}
+	        } else if (shape instanceof Path2D.Double) {
+	            Path2D.Double compoundShape = new Path2D.Double();
+	            switch (countRotation) {
+	            	case 0:
+			            compoundShape.append(new Rectangle2D.Double(x, y, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x + 30, y - 30, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x + 60, y, 30, 30), false);
+			            break;
+	            	case 1:
+		            	compoundShape.append(new Rectangle2D.Double(x, y, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x + 30, y + 30, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x, y + 60, 30, 30), false);
+			            break;
+	            	case 2:
+		            	compoundShape.append(new Rectangle2D.Double(x, y, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x - 30, y + 30, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x - 60, y, 30, 30), false);
+			            break;
+		            case 3:
+		            	compoundShape.append(new Rectangle2D.Double(x, y, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x - 30, y - 30, 30, 30), false);
+			            compoundShape.append(new Rectangle2D.Double(x, y - 60, 30, 30), false);
+			            break;
+	            }
+		        this.shape = compoundShape;
+	        }
+    }
+   
+    public int getRotationCount() {
+    	return countRotation;
+    }
+    
+    public void setRotationCount(int contRotacao) {
+    	this.countRotation = contRotacao;
+    }
+    
+    public void rotate() {
+    	countRotation = (countRotation + 1) % 4;
     }
 
     public static void setTipoNavio(Navio nav) {
