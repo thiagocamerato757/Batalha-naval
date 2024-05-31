@@ -141,16 +141,17 @@ public class PrimFrame extends JFrame {
         if (col <= 0 || row <= 0 || col >= NUMERO_COLUNAS || row >= NUMERO_LINHAS) {
             return false;
         }
-
-        // Verificar se o navio é um hidroavião (tamanho 3) e está na primeira linha
-        if (ship.getTamanho() == 3 && row == 1) {
-            return false;
-        }
         
         if (ship.getRotationCount() == 0) {
             // Verifica se o navio vertical passa dos limites do tabuleiro
         	if (ship.getTamanho() == 2 ) {
             	if (row + 1 >= NUMERO_LINHAS) {
+            		return false;
+            	}
+            }
+        	if (ship.getTamanho() == 3 ) {
+        		System.out.println(row);
+            	if (col + 2 >= NUMERO_COLUNAS  || row - 1 <= 0) {
             		return false;
             	}
             }
@@ -171,6 +172,11 @@ public class PrimFrame extends JFrame {
             		return false;
             	}
             }
+        	if (ship.getTamanho() == 3) {
+        		if (col + 1 >= NUMERO_COLUNAS || row + 2 >= NUMERO_LINHAS) {
+            		return false;
+            	}
+        	}
             if (ship.getTamanho() == 4) {
             	if (col + 3 >= NUMERO_COLUNAS) {
             		return false;
@@ -184,6 +190,11 @@ public class PrimFrame extends JFrame {
         } else if (ship.getRotationCount() == 2) {
         	if (ship.getTamanho() == 2 ) {
             	if (row - 1 <= 0) {
+            		return false;
+            	}
+            }
+        	if (ship.getTamanho() == 3 ) {
+            	if (row + 1 >= NUMERO_LINHAS || col - 2 <= 0) {
             		return false;
             	}
             }
@@ -201,6 +212,11 @@ public class PrimFrame extends JFrame {
         else {
         	if (ship.getTamanho() == 2 ) {
             	if (col - 1 <= 0) {
+            		return false;
+            	}
+            }
+        	if (ship.getTamanho() == 3 ) {
+            	if (col - 1 <= 0 || row - 2 <= 0) {
             		return false;
             	}
             }
