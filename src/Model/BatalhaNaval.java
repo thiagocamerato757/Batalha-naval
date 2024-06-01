@@ -12,6 +12,14 @@ public class BatalhaNaval {
     private static int naviosRestantes = NUM_NAVIOS;
     private ArrayList<Navio> navios = new ArrayList<>();
    
+    public ArrayList<Navio> getNavios() {
+    	return this.navios;
+    }
+    
+    public void addNavios(Navio navio) {
+    	this.navios.add(navio);
+    }
+    
     public static void exibirTabuleiro(char[][] tabuleiro) {
         for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
