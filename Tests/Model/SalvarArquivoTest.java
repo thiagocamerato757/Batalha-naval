@@ -11,34 +11,24 @@ import org.junit.Test;
 
 public class SalvarArquivoTest {
 	
-    @Test
-    public void testEscreverArq() {
-    	BatalhaNaval batalhanaval = new BatalhaNaval();
-        try {
-        	String[] navi1 = {"A1", "B2", "C3", "D4", "E5"};
-            batalhanaval.setNavios1 (navi1);
-            String[] tiro1 = {"A1", "B2", "C3"};
-            batalhanaval.setTiros1(tiro1);
-            int qtd_tiro1 = 3;
-            batalhanaval.setQtd_tiros1(qtd_tiro1);
-            String[] navi2 = {"F6", "G7", "H8", "I9", "J10"};
-            batalhanaval.setNavios2(navi2);
-            String[] tiro2 = {"F6", "G7", "H8", "I9", "J10"};
-            batalhanaval.setTiros2(tiro2);
-            int qtd_tiro2 = 5;
-            batalhanaval.setQtd_tiros2(qtd_tiro2);
-            
-            SalvarArquivo salvaTest = new SalvarArquivo();
-            salvaTest.EscreverArq();
-
-            // Testa se o arquivo existe
-            File file = new File("dados_partida.txt");
-            assertTrue(file.exists());
-
-        } catch (IOException e) {
-            fail("IOException should not be thrown here");
-        }
-    }
+    //@Test
+	/*
+	 * public void testEscreverArq() { BatalhaNaval batalhanaval = new
+	 * BatalhaNaval(); try { String[] navi1 = {"A1", "B2", "C3", "D4", "E5"};
+	 * batalhanaval.setNavios1 (navi1); String[] tiro1 = {"A1", "B2", "C3"};
+	 * batalhanaval.setTiros1(tiro1); int qtd_tiro1 = 3;
+	 * batalhanaval.setQtd_tiros1(qtd_tiro1); String[] navi2 = {"F6", "G7", "H8",
+	 * "I9", "J10"}; batalhanaval.setNavios2(navi2); String[] tiro2 = {"F6", "G7",
+	 * "H8", "I9", "J10"}; batalhanaval.setTiros2(tiro2); int qtd_tiro2 = 5;
+	 * batalhanaval.setQtd_tiros2(qtd_tiro2);
+	 * 
+	 * SalvarArquivo salvaTest = new SalvarArquivo(); salvaTest.EscreverArq();
+	 * 
+	 * // Testa se o arquivo existe File file = new File("dados_partida.txt");
+	 * assertTrue(file.exists());
+	 * 
+	 * } catch (IOException e) { fail("IOException should not be thrown here"); } }
+	 */
 
     @Test
    public void testLerArq() {

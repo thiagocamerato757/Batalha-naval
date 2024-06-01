@@ -8,6 +8,7 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import Model.Navio;
 import java.util.List;
+import View.Coordenadas;
 
 public class PrimFrame extends JFrame {
     private ArrayList<Navio> ships = new ArrayList<>();
@@ -237,9 +238,10 @@ public class PrimFrame extends JFrame {
         double newY = panel.down_y + row * CELULA_SIZE;
         Shape newShape = createShapeAtPosition(newX, newY, ship);
         cells = getShipCells(newX,newY,ship);
-        System.out.println(ship.getTipo());
+        //System.out.println(ship.getTipo());
         System.out.println(cells);
-        ship.setCoordenadas(cells);
+        Coordenadas coord = new Coordenadas(cells); 
+        coord.coordenadaGraficaParaIndices(ship); //envia as coords matriciais para a embarcacao
         cells.clear();
         for (Navio otherShip : ships) {
             if (otherShip != ship) {

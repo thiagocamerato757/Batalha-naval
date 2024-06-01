@@ -17,14 +17,6 @@ public class Navio {
     private List<Point> coordenadas = new ArrayList<>();
     private int countRotation = 0;
 
-    public List<Point> getCoordenadas() {
-		return coordenadas;
-	}
-
-	public void setCoordenadas(List<Point> coordenadas) {
-		this.coordenadas = coordenadas;
-	}
-
 	public enum TipodeNavio {
         submarino,
         destroyer,
@@ -32,7 +24,14 @@ public class Navio {
         cruzador,
         couracado;
     }
+	
+	public List<Point> getCoordenadas() {
+		return coordenadas;
+	}
 
+	public void adicionarCoordenada(Point coordenada) {
+        this.coordenadas.add(coordenada);
+    }
     public Navio(int tam) {
         this.setTamanho(tam);
         setTipoNavio(this);
