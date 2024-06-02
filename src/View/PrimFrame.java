@@ -91,21 +91,21 @@ public class PrimFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                	
-                	int col = (p.x - panel.right_x) / CELULA_SIZE;
-                    int row = (p.y - panel.down_y) / CELULA_SIZE;
-                	double newX = panel.right_x + col * CELULA_SIZE;
-                    double newY = panel.down_y + row * CELULA_SIZE;
-                	cells = getShipCells(newX,newY,pendingShip);
-                    Coordenadas coord = new Coordenadas(cells,panel.right_x,panel.down_y); 
-                    coord.coordenadaGraficaParaIndices(pendingShip); //envia as coords matriciais para a embarcacao
-                    cells.clear();
-                    tabuleiro.addNavios(pendingShip);
                     if(pendingShip != null && pendingShip.getCor() != Color.red) {
                     	pendingShip.setConfirmed(true);
+                    	int col = (p.x - panel.right_x) / CELULA_SIZE;
+                        int row = (p.y - panel.down_y) / CELULA_SIZE;
+                    	double newX = panel.right_x + col * CELULA_SIZE;
+                        double newY = panel.down_y + row * CELULA_SIZE;
+                    	cells = getShipCells(newX,newY,pendingShip);
+                        Coordenadas coord = new Coordenadas(cells,panel.right_x,panel.down_y); 
+                        coord.coordenadaGraficaParaIndices(pendingShip); //envia as coords matriciais para a embarcacao
+                        cells.clear();
+                        tabuleiro.addNavios(pendingShip);
                         selectedShip = null;
                         pendingShip = null;
                         panel.repaint();
+                        
                     }
                     else if(selectedShip != null && pendingShip == null) {
                     	selectedShip = null;
@@ -113,6 +113,7 @@ public class PrimFrame extends JFrame {
                     else {
                     	JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma");
                     }
+                    
                 }
             }
         });
