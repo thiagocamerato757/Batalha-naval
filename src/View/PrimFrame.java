@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import Model.Navio;
 import Model.BatalhaNaval;
 import java.util.List;
-import View.Coordenadas;
 
 public class PrimFrame extends JFrame {
     private ArrayList<Navio> ships = new ArrayList<>();
@@ -82,7 +81,6 @@ public class PrimFrame extends JFrame {
 	                        else {
 	                            pendingShip.setCor(Color.RED);
 	                        }
-	                        
 	                    }
 	                }
 	                panel.repaint();
@@ -98,7 +96,6 @@ public class PrimFrame extends JFrame {
                     int row = (p.y - panel.down_y) / CELULA_SIZE;
                 	double newX = panel.right_x + col * CELULA_SIZE;
                     double newY = panel.down_y + row * CELULA_SIZE;
-                    Shape newShape = createShapeAtPosition(newX, newY, pendingShip);
                 	cells = getShipCells(newX,newY,pendingShip);
                     Coordenadas coord = new Coordenadas(cells,panel.right_x,panel.down_y); 
                     coord.coordenadaGraficaParaIndices(pendingShip); //envia as coords matriciais para a embarcacao
@@ -270,9 +267,6 @@ public class PrimFrame extends JFrame {
             }
         }
 
-        double newX = panel.right_x + col * CELULA_SIZE;
-        double newY = panel.down_y + row * CELULA_SIZE;
-        Shape newShape = createShapeAtPosition(newX, newY, ship);
         for (Navio otherShip : ships) {
             if (otherShip != ship) {
                 if (shapesOverlap(ship.getShape(), otherShip.getShape()) || shapesAdjacent(ship.getShape(), otherShip.getShape())) {
@@ -322,19 +316,6 @@ public class PrimFrame extends JFrame {
             }
 		}
         return false;
-    }
-
-    private Shape createShapeAtPosition(double x, double y, Navio ship) {
-            if (ship.getShape() instanceof Rectangle2D.Double) {
-                return new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE * ship.getTamanho());
-            } else if (ship.getShape() instanceof Path2D.Double) {
-                Path2D.Double compoundShape = new Path2D.Double();
-                compoundShape.append(new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE), false);
-                compoundShape.append(new Rectangle2D.Double(x + CELULA_SIZE, y - CELULA_SIZE, CELULA_SIZE, CELULA_SIZE), false);
-                compoundShape.append(new Rectangle2D.Double(x + 2 * CELULA_SIZE, y, CELULA_SIZE, CELULA_SIZE), false);
-                return compoundShape;
-            }
-            return null;
     }
     
     private boolean areAllShipsConfirmed() {
