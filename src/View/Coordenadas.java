@@ -20,20 +20,18 @@ public class Coordenadas {
     	for(int i = 0; i < coords.size(); i++) {
     		int coluna = ((coords.get(i).x - right_x) / 30) - 1;
     		int linha = ((coords.get(i).y - down_y) / 30) - 1;
-    		System.out.println(linha);
-    		System.out.println(coluna);
-    		navio.adicionarCoordenada(new Point(linha,coluna));
+    		navio.adicionarCoordenada(new Point(coluna,linha));
     	}
     }
     
     public List<Point> coordenadaIndicesParaGrafica(Navio navio) {
     	List<Point> coordGrafica = new ArrayList<>();
-    	for(int i = 0; i < coords.size(); i++) {
-    		int coluna = ((coords.get(i).x + right_x) * 30) + 1;
-    		int linha = ((coords.get(i).y + down_y) * 30) + 1;
-    		coordGrafica.add(new Point(linha,coluna));
-    	}
-    	return coordGrafica;
+        for (int i = 0; i < coords.size(); i++) {
+            int coluna = ((coords.get(i).x + 1) * 30) + right_x;
+            int linha = ((coords.get(i).y + 1) * 30) + down_y;
+            coordGrafica.add(new Point(coluna, linha));
+        }
+        return coordGrafica;
     }
 
 }

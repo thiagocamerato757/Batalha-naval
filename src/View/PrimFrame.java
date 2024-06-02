@@ -58,41 +58,15 @@ public class PrimFrame extends JFrame {
                 		selectedShip.rotate();
                 		int col = (p.x - panel.right_x) / CELULA_SIZE;
 	                    int row = (p.y - panel.down_y) / CELULA_SIZE;
-	
 
 	                    double newX = panel.right_x + col * CELULA_SIZE;
 	                    double newY = panel.down_y + row * CELULA_SIZE;
 	                    pendingShip = selectedShip;
 	                    pendingShip.setPosition(newX, newY);
-	                        
-	                    
-                		List<Point> coord = getShipCells(newX, newY, selectedShip);
-                		System.out.println(coord);
-                		List<Point> otherCoord = null;
-                		Coordenadas coordenadas;
-                		ArrayList<Navio> confirmedShips = tabuleiro.getNavios();
-                		for (Navio otherShip : confirmedShips) {
-                            if (otherShip != selectedShip) {
-                            	coordenadas = new Coordenadas(otherShip.getCoordenadas(), panel.right_x, panel.down_y);
-                            	otherCoord = coordenadas.coordenadaIndicesParaGrafica(otherShip);
-                            	for (int i = 0; i < otherCoord.size(); i++) {
-                            		for (int j = 0; j < coord.size(); j++) {
-                            			if(otherCoord.get(i) == coord.get(j)) {
-                            				
-                            				selectedShip.setCor(Color.red);
-                            				return;
-                            			}
-                            		}
-                            	}
-                            }
-                		}
-                		panel.repaint();
-                        }
-                	}
+
+                    }
+               }
                 
-                
-                
-                if(SwingUtilities.isLeftMouseButton(e)) {
 	                if (selectedShip != null) {
 	                    int col = (p.x - panel.right_x) / CELULA_SIZE;
 	                    int row = (p.y - panel.down_y) / CELULA_SIZE;
@@ -100,21 +74,19 @@ public class PrimFrame extends JFrame {
 	                    if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
 	                        double newX = panel.right_x + col * CELULA_SIZE;
 	                        double newY = panel.down_y + row * CELULA_SIZE;
-	                        if (!isOverlapping(newX, newY, selectedShip) && isValidPosition(col, row, selectedShip)) {
-	                            pendingShip = selectedShip;
-	                            pendingShip.setPosition(newX, newY);
+	                        pendingShip = selectedShip;
+                            pendingShip.setPosition(newX, newY);
+	                        if (!isOverlapping(newX, newY,selectedShip) && isValidPosition(col,row,selectedShip)) {
 	                            pendingShip.setCor(originalColor);
 	                        }
 	                        else {
-	                        	pendingShip = selectedShip;
-	                            pendingShip.setPosition(newX, newY);
 	                            pendingShip.setCor(Color.RED);
 	                        }
-	                        panel.repaint();
+	                        
 	                    }
 	                }
-	            }
-            }
+	                panel.repaint();
+	         }
         });    
 
         panel.addKeyListener(new KeyAdapter() {
@@ -153,18 +125,55 @@ public class PrimFrame extends JFrame {
     
     private List<Point> getShipCells(double x, double y, Navio ship) {
         int tamanho = ship.getTamanho();
+        int rotation = ship.getRotationCount();
+        List<Point> cells = new ArrayList<>();
 
-        if (ship.getShape() instanceof Rectangle2D.Double) {
-            for (int i = 0; i < tamanho; i++) {
-                this.cells.add(new Point((int) x, (int) y));
+        if (tamanho == 3 && ship.getShape() instanceof Path2D.Double) {
+            // Hidroavião
+            switch (rotation) {
+                case 0: // Normal
+                    cells.add(new Point((int) x, (int) y));
+                    cells.add(new Point((int) x + CELULA_SIZE, (int) y - CELULA_SIZE));
+                    cells.add(new Point((int) (x + 2 * CELULA_SIZE), (int) y));
+                    break;
+                case 1: // 90 degrees
+                    cells.add(new Point((int) x, (int) y));
+                    cells.add(new Point((int) x + CELULA_SIZE, (int) y + CELULA_SIZE));
+                    cells.add(new Point((int) x, (int) (y + 2 * CELULA_SIZE)));
+                    break;
+                case 2: // 180 degrees
+                    cells.add(new Point((int) x, (int) y));
+                    cells.add(new Point((int) x - CELULA_SIZE, (int) y + CELULA_SIZE));
+                    cells.add(new Point((int) (x - 2 * CELULA_SIZE), (int) y));
+                    break;
+                case 3: // 270 degrees
+                    cells.add(new Point((int) x, (int) y));
+                    cells.add(new Point((int) x - CELULA_SIZE, (int) y - CELULA_SIZE));
+                    cells.add(new Point((int) x, (int) (y - 2 * CELULA_SIZE)));
+                    break;
             }
-        } else if (ship.getShape() instanceof Path2D.Double) {
-            this.cells.add(new Point((int) x, (int) y));
-            this.cells.add(new Point((int) x + CELULA_SIZE, (int) y - CELULA_SIZE));
-            this.cells.add(new Point((int) (x + 2 * CELULA_SIZE), (int) y));
+        } else {
+            // Navios normais
+            for (int i = 0; i < tamanho; i++) {
+                switch (rotation) {
+                    case 0: // Normal
+                        cells.add(new Point((int) x, (int) (y + i * CELULA_SIZE)));
+                        break;
+                    case 1: // 90 degrees
+                        cells.add(new Point((int) (x + i * CELULA_SIZE), (int) y));
+                        break;
+                    case 2: // 180 degrees
+                        cells.add(new Point((int) x, (int) (y - i * CELULA_SIZE)));
+                        break;
+                    case 3: // 270 degrees
+                        cells.add(new Point((int) (x - i * CELULA_SIZE), (int) y));
+                        break;
+                }
+            }
         }
 
         return cells;
+    
     }
     
     private boolean isValidPosition(int col, int row, Navio ship) {
@@ -260,18 +269,13 @@ public class PrimFrame extends JFrame {
             	}
             }
         }
-        
 
         double newX = panel.right_x + col * CELULA_SIZE;
         double newY = panel.down_y + row * CELULA_SIZE;
         Shape newShape = createShapeAtPosition(newX, newY, ship);
-        //cells = getShipCells(newX,newY,ship);
-        //Coordenadas coord = new Coordenadas(cells); 
-        //coord.coordenadaGraficaParaIndices(ship); //envia as coords matriciais para a embarcacao
-        //cells.clear();
         for (Navio otherShip : ships) {
             if (otherShip != ship) {
-                if (shapesOverlap(newShape, otherShip.getShape()) || shapesAdjacent(newShape, otherShip.getShape())) {
+                if (shapesOverlap(ship.getShape(), otherShip.getShape()) || shapesAdjacent(ship.getShape(), otherShip.getShape())) {
                     return false;
                 }
             }
@@ -299,26 +303,38 @@ public class PrimFrame extends JFrame {
     }
 
     private boolean isOverlapping(double x, double y, Navio ship) {
-        Shape newShape = createShapeAtPosition(x, y, ship);
-        for (Navio otherShip : ships) {
-            if (otherShip != ship && newShape.getBounds2D().intersects(otherShip.getShape().getBounds2D())) {
-                return true;
+        
+        List<Point> coord = getShipCells(x, y, ship);
+		List<Point> otherCoord = null;
+		Coordenadas coordenadas;
+		ArrayList<Navio> confirmedShips = tabuleiro.getNavios();
+		for (Navio otherShip : confirmedShips) {
+            if (otherShip != ship) {
+            	coordenadas = new Coordenadas(otherShip.getCoordenadas(), panel.right_x, panel.down_y);
+            	otherCoord = coordenadas.coordenadaIndicesParaGrafica(otherShip);
+            	for (int i = 0; i < otherCoord.size(); i++) {
+            		for (int j = 0; j < coord.size(); j++) {
+            			if(otherCoord.get(i).equals(coord.get(j))) {
+            				return true;
+            			}
+            		}
+            	}
             }
-        }
+		}
         return false;
     }
 
     private Shape createShapeAtPosition(double x, double y, Navio ship) {
-        if (ship.getShape() instanceof Rectangle2D.Double) {
-            return new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE * ship.getTamanho());
-        } else if (ship.getShape() instanceof Path2D.Double) {
-            Path2D.Double compoundShape = new Path2D.Double();
-            compoundShape.append(new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE), false);
-            compoundShape.append(new Rectangle2D.Double(x + CELULA_SIZE, y - CELULA_SIZE, CELULA_SIZE, CELULA_SIZE), false);
-            compoundShape.append(new Rectangle2D.Double(x + 2 * CELULA_SIZE, y, CELULA_SIZE, CELULA_SIZE), false);
-            return compoundShape;
-        }
-        return null;
+            if (ship.getShape() instanceof Rectangle2D.Double) {
+                return new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE * ship.getTamanho());
+            } else if (ship.getShape() instanceof Path2D.Double) {
+                Path2D.Double compoundShape = new Path2D.Double();
+                compoundShape.append(new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE), false);
+                compoundShape.append(new Rectangle2D.Double(x + CELULA_SIZE, y - CELULA_SIZE, CELULA_SIZE, CELULA_SIZE), false);
+                compoundShape.append(new Rectangle2D.Double(x + 2 * CELULA_SIZE, y, CELULA_SIZE, CELULA_SIZE), false);
+                return compoundShape;
+            }
+            return null;
     }
     
     private boolean areAllShipsConfirmed() {
