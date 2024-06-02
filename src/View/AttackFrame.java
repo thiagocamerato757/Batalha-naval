@@ -9,7 +9,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 public class AttackFrame extends JFrame {
-    private List<Navio> opponentShips;
+    private List<Navio> opponentShips1;
+    private List<Navio> opponentShips2;
+    private List<Point>tiros1;
+    private List<Point>tiros2;
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
     public final int LARG_DEFAULT = d.width;
     public final int ALT_DEFAULT = d.height;
@@ -66,8 +69,24 @@ public class AttackFrame extends JFrame {
             }
         }
     }
+    
+    protected List<Navio> getOpponentShips1() {
+		return opponentShips1;
+	}
 
-    public static void main(String[] args) {
+	protected void setOpponentShips1(List<Navio> opponentShips1) {
+		this.opponentShips1 = opponentShips1;
+	}
+
+	protected List<Navio> getOpponentShips2() {
+		return opponentShips2;
+	}
+
+	protected void setOpponentShips2(List<Navio> opponentShips2) {
+		this.opponentShips2 = opponentShips2;
+	}
+
+	public static void main(String[] args) {
         AttackFrame attackFrame = new AttackFrame("Batalha naval - Ataque");
         attackFrame.setVisible(true);
     }

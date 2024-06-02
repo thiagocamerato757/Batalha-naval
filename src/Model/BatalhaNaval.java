@@ -11,6 +11,7 @@ public class BatalhaNaval {
     private static int qtd_tiros = 0;
     private static int naviosRestantes = NUM_NAVIOS;
     private ArrayList<Navio> navios = new ArrayList<>();
+    private boolean posicaoPronta = false;
    
     public ArrayList<Navio> getNavios() {
     	return this.navios;
@@ -38,7 +39,14 @@ public class BatalhaNaval {
     	}
 		return this.tabuleiro;
     }
-
+    
+    protected boolean getEstadoPos() {
+    	return this.posicaoPronta;
+    }
+    
+    protected void setEstadoPos(boolean TF) {
+    	this.posicaoPronta = TF;
+    }
     //#TODO : aleterar essa funcao para a partida 
 	/*
 	 * private static int realizarJogada(char[][] tabuleiro, int naviosRestantes) {

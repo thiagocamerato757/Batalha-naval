@@ -326,16 +326,25 @@ public class PrimFrame extends JFrame {
         }
         return true;
     }
+    	
+    
+    protected ArrayList<Navio> getShips() {
+		return ships;
+	}
 
-    class PrimPanel extends JPanel {
+
+	class PrimPanel extends JPanel {
+		AtkSingleton atk;
         JButton b1 = new JButton("Confirmar");
-        
+        TrocaContexto troca = new TrocaContexto();
+        passaInfoATK atq = new passaInfoATK();
         int right_x = LARG_DEFAULT / 2;
         int X = LARG_DEFAULT / 7;
         int Y = ALT_DEFAULT / 7;
         int down_y = ALT_DEFAULT / 7;
 
         public PrimPanel() {
+        	atk = AtkSingleton.getInstance();
             initShips();
             setLayout(null);
             add(b1);
@@ -344,7 +353,12 @@ public class PrimFrame extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (areAllShipsConfirmed()) {
+                    	troca.atualizaEstadoTab(tabuleiro, true);
+                    	atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
                         PrimFrame.this.dispose();
+                        if(troca.getContProntos() == 2) {
+                        	troca.trocaPraAtaque(); //troca para tela de ataque
+                        }
                     } else {
                         JOptionPane.showMessageDialog(PrimFrame.this, "Posicione todas as armas antes de confirmar!");
                     }
@@ -438,6 +452,8 @@ public class PrimFrame extends JFrame {
                 g2d.draw(ship.getShape());
             }
         }
+        
+        
     }
 
     public static void main(String[] args) {
