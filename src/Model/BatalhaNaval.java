@@ -4,24 +4,38 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import Model.Navio;
 
-public class BatalhaNaval {
+public class BatalhaNaval implements OrbservaTabuleiro {
     private static final int TAMANHO_TABULEIRO = 15;
     private static final int NUM_NAVIOS = 15;
-    private final char[][] tabuleiro = new char[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
+    private final int[][] tabuleiro = new int[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
     private static int qtd_tiros = 0;
     private static int naviosRestantes = NUM_NAVIOS;
     private ArrayList<Navio> navios = new ArrayList<>();
     private boolean posicaoPronta = false;
-   
+    
+    public BatalhaNaval() {
+    	for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
+            for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+            	tabuleiro[i][j] = 0;
+                System.out.print(tabuleiro[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
     public ArrayList<Navio> getNavios() {
     	return this.navios;
+    }
+    
+    public void setNavios(ArrayList<Navio>navios) {
+    	this.navios = navios;
     }
     
     public void addNavios(Navio navio) {
     	this.navios.add(navio);
     }
     
-    public static void exibirTabuleiro(char[][] tabuleiro) {
+    public static void exibirTabuleiro(int[][] tabuleiro) {
         for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
                 System.out.print(tabuleiro[i][j]);
@@ -31,13 +45,21 @@ public class BatalhaNaval {
         System.out.println();
     }
     
-    public char[][]AtualizaTab_Pos(){
+    public void AtualizaTab_Pos(Navio ship){ //implemetacao da interface
+    	navios.add(ship);
     	for(int i = 0; i < this.navios.size(); i++) {
     		for(int j = 0; j < this.navios.get(i).getCoordenadas().size(); j++) {
-    			this.tabuleiro[this.navios.get(i).getCoordenadas().get(j).x][this.navios.get(i).getCoordenadas().get(j).y] = (char)this.navios.get(i).getTamanho();
+    			this.tabuleiro[this.navios.get(i).getCoordenadas().get(j).x][this.navios.get(i).getCoordenadas().get(j).y] = this.navios.get(i).getTamanho();
     		}
     	}
-		return this.tabuleiro;
+    	
+    	for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
+            for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+                System.out.print(tabuleiro[j][i] + " ");
+            }
+            System.out.println();
+        }
+    	
     }
     
     protected boolean getEstadoPos() {

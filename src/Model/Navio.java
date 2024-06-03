@@ -16,20 +16,6 @@ public class Navio {
     private boolean confirmed = false;
     private List<Point> coordenadas = new ArrayList<>();
     private int countRotation = 0;
-    private boolean valid = true;
-    
-    public boolean notValid(Navio ship){
-    	ship.setCor(Color.red);
-    	return !valid;
-    }
-    
-	public boolean getValid() { 
-	    return valid;
-	}
-	
-	public void setValid(Navio ship) { 
-	    ship.setCor(ship.getCor());
-	}
     
 	public enum TipodeNavio {
         submarino,

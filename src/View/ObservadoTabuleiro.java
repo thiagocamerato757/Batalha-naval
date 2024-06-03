@@ -1,5 +1,7 @@
 package View;
+import Model.Navio;
+import Model.OrbservaTabuleiro;
 
 public interface ObservadoTabuleiro {
-	public void pegaInfos();
+	public void NotificaObserverTabu(OrbservaTabuleiro obs,Navio ship);
 }
