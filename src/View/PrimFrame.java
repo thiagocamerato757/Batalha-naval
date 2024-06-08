@@ -58,12 +58,12 @@ public class PrimFrame extends JFrame {
                 		selectedShip.rotate();
                 		int col = (p.x - panel.right_x) / CELULA_SIZE;
 	                    int row = (p.y - panel.down_y) / CELULA_SIZE;
-
+	                    if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
 	                    double newX = panel.right_x + col * CELULA_SIZE;
 	                    double newY = panel.down_y + row * CELULA_SIZE;
 	                    pendingShip = selectedShip;
 	                    pendingShip.setPosition(newX, newY);
-
+	                    }
                     }
                }
                 
@@ -113,7 +113,12 @@ public class PrimFrame extends JFrame {
                     	selectedShip = null;
                     }
                     else {
-                    	JOptionPane.showMessageDialog(PrimFrame.this, "Não foi possível posicionar a arma");
+                    	selectedShip.restoreOriginalPosition();
+                        selectedShip.setCor(originalColor);
+                        System.out.println(selectedShip.getCor());
+                        panel.repaint();
+                        selectedShip = null;
+                        pendingShip = null;
                     }
                     
                 }

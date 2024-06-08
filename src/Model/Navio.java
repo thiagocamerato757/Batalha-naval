@@ -16,6 +16,7 @@ public class Navio {
     private boolean confirmed = false;
     private List<Point> coordenadas = new ArrayList<>();
     private int countRotation = 0;
+    private double originalX, originalY;
     
 	public enum TipodeNavio {
         submarino,
@@ -171,4 +172,21 @@ public class Navio {
 	public void setConfirmed(boolean confirmed) { 
 	    this.confirmed = confirmed;
 	}
+
+public void saveOriginalPosition() {
+    if (shape instanceof Rectangle2D.Double) {
+        Rectangle2D.Double rect = (Rectangle2D.Double) shape;
+        originalX = rect.getX();
+        originalY = rect.getY();
+    } else if (shape instanceof Path2D.Double) {
+        Path2D.Double path = (Path2D.Double) shape;
+        Rectangle2D bounds = path.getBounds2D();
+        originalX = bounds.getX();
+        originalY = bounds.getY();
+    }
+}
+public void restoreOriginalPosition() {
+	countRotation = 0;
+    setPosition(originalX, originalY);
+}
 }
