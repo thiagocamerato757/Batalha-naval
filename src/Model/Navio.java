@@ -17,7 +17,26 @@ public class Navio {
     private List<Point> coordenadas = new ArrayList<>();
     private int countRotation = 0;
     private double originalX, originalY;
+    private boolean isHit, isSunk;
     
+	public boolean isHit(Navio navio) {
+		navio.setCor(Color.gray);
+		return isHit;
+	}
+
+	public void setHit(boolean isHit) {
+		this.isHit = isHit;
+	}
+
+	public boolean isSunk(Navio navio) {
+		navio.setCor(Color.black);
+		return isSunk;
+	}
+
+	public void setSunk(boolean isSunk) {
+		this.isSunk = isSunk;
+	}
+
 	public enum TipodeNavio {
         submarino,
         destroyer,
@@ -168,25 +187,17 @@ public class Navio {
 	    return confirmed;
 	}
 	
-	
 	public void setConfirmed(boolean confirmed) { 
 	    this.confirmed = confirmed;
 	}
 
-public void saveOriginalPosition() {
-    if (shape instanceof Rectangle2D.Double) {
-        Rectangle2D.Double rect = (Rectangle2D.Double) shape;
-        originalX = rect.getX();
-        originalY = rect.getY();
-    } else if (shape instanceof Path2D.Double) {
-        Path2D.Double path = (Path2D.Double) shape;
-        Rectangle2D bounds = path.getBounds2D();
-        originalX = bounds.getX();
-        originalY = bounds.getY();
-    }
-}
-public void restoreOriginalPosition() {
-	countRotation = 0;
-    setPosition(originalX, originalY);
-}
+	public void saveOriginalPosition(double originalX, double originalY) {
+	    this.originalX = originalX;
+	    this.originalY = originalY;
+	}
+	
+	public void restoreOriginalPosition() {
+		countRotation = 0;
+	    setPosition(originalX, originalY);
+	}
 }

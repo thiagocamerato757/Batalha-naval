@@ -25,7 +25,6 @@ public class AttackFrame extends JFrame {
     AttackPanel panel;
     private Point p;
     private passaInfoATK vezJogador = new passaInfoATK();
-    Graphics2D g2d;
 
     public AttackFrame(String s) {
         super(s);
@@ -46,7 +45,10 @@ public class AttackFrame extends JFrame {
                         Color shotColor = Color.CYAN;
                         for (Navio ship : opponentShips2) {
                             if (ship.getCoordenadas().contains(coordTabu)) {
-                                shotColor = ship.getCor();
+                            	shotColor = Color.gray;
+                            	if (isShipSunk(ship.getCoordenadas(), tiros1)) {
+                            		shotColor = Color.BLACK;
+                            	}
                                 System.out.println("Você atingiu um " + ship.getTipo());
                                 break;
                             }
@@ -56,7 +58,7 @@ public class AttackFrame extends JFrame {
                         Color shotColor = Color.CYAN;
                         for (Navio ship : opponentShips1) {
                             if (ship.getCoordenadas().contains(coordTabu)) {
-                                shotColor = ship.getCor();
+                                shotColor = Color.BLACK;
                                 System.out.println("Você atingiu um " + ship.getTipo());
                                 break;
                             }
@@ -68,6 +70,15 @@ public class AttackFrame extends JFrame {
             }
         });
     }
+    
+    private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
+        for (Point coord : shipCoords) {
+            if (!shots.containsKey(coord)) {
+                return false; // Se algum ponto do navio não foi atingido, o navio não foi afundado
+            }
+        }
+        return true; // Se todos os pontos do navio foram atingidos, o navio foi afundado
+    }
 
     class AttackPanel extends JPanel {
         int right_x = LARG_DEFAULT / 2;
@@ -77,7 +88,7 @@ public class AttackFrame extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g2d = (Graphics2D) g;
+            Graphics2D g2d = (Graphics2D) g;
             drawBoard(g2d, right_x, down_y);
             drawBoard(g2d, secondBoardXOffset, down_y);
             drawShots(g2d, right_x, down_y, tiros1);
@@ -118,6 +129,7 @@ public class AttackFrame extends JFrame {
                 int x = startX + (shot.x * CELULA_SIZE) + CELULA_SIZE;
                 int y = startY + (shot.y * CELULA_SIZE) + CELULA_SIZE;
                 Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
+
                 g2d.setColor(color);
                 g2d.fill(cell);
             }

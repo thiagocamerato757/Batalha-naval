@@ -42,90 +42,98 @@ public class PrimFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 p = e.getPoint();
-                
-                if (pendingShip == null) {
+
+                if (pendingShip == null && selectedShip == null) {
                     for (Navio ship : ships) {
                         if (!ship.isConfirmed() && ship.getShape().contains(p)) {
                             selectedShip = ship;
                             originalColor = ship.getCor();
+                            selectedShip.setCor(getLighterColor(originalColor));
+                            panel.repaint();
                             return;
                         }
                     }
                 }
-                
-                if(SwingUtilities.isRightMouseButton(e)) {
-                	if(selectedShip != null && !selectedShip.isConfirmed()){
-                		selectedShip.rotate();
-                		int col = (p.x - panel.right_x) / CELULA_SIZE;
-	                    int row = (p.y - panel.down_y) / CELULA_SIZE;
-	                    if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
-	                    double newX = panel.right_x + col * CELULA_SIZE;
-	                    double newY = panel.down_y + row * CELULA_SIZE;
-	                    pendingShip = selectedShip;
-	                    pendingShip.setPosition(newX, newY);
-	                    }
-                    }
-               }
-                
-	                if (selectedShip != null) {
-	                    int col = (p.x - panel.right_x) / CELULA_SIZE;
-	                    int row = (p.y - panel.down_y) / CELULA_SIZE;
-	
-	                    if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
-	                        double newX = panel.right_x + col * CELULA_SIZE;
-	                        double newY = panel.down_y + row * CELULA_SIZE;
-	                        pendingShip = selectedShip;
+
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    if (selectedShip != null && !selectedShip.isConfirmed()) {
+                        selectedShip.rotate();
+                        int col = (p.x - panel.right_x) / CELULA_SIZE;
+                        int row = (p.y - panel.down_y) / CELULA_SIZE;
+                        if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
+                            double newX = panel.right_x + col * CELULA_SIZE;
+                            double newY = panel.down_y + row * CELULA_SIZE;
+                            pendingShip = selectedShip;
                             pendingShip.setPosition(newX, newY);
-	                        if (!isOverlapping(newX, newY,selectedShip) && isValidPosition(col,row,selectedShip)) {
-	                            pendingShip.setCor(originalColor);
-	                        }
-	                        else {
-	                            pendingShip.setCor(Color.RED);
-	                        }
-	                    }
-	                }
-	                panel.repaint();
-	         }
-        });    
+                        }
+                    }
+                }
+
+                if (selectedShip != null) {
+                    int col = (p.x - panel.right_x) / CELULA_SIZE;
+                    int row = (p.y - panel.down_y) / CELULA_SIZE;
+
+                    if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
+                        double newX = panel.right_x + col * CELULA_SIZE;
+                        double newY = panel.down_y + row * CELULA_SIZE;
+                        pendingShip = selectedShip;
+                        pendingShip.setPosition(newX, newY);
+                        if (!isOverlapping(newX, newY, selectedShip) && isValidPosition(col, row, selectedShip)) {
+                            pendingShip.setCor(getLighterColor(originalColor));
+                        } else {
+                            pendingShip.setCor(Color.RED);
+                        }
+                    }
+                }
+                panel.repaint();
+            }
+        });
 
         panel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    if(pendingShip != null && pendingShip.getCor() != Color.red) {
-                    	pendingShip.setConfirmed(true);
-                    	int col = (p.x - panel.right_x) / CELULA_SIZE;
+                    if (pendingShip != null && pendingShip.getCor() != Color.RED) {
+                        pendingShip.setConfirmed(true);
+                        int col = (p.x - panel.right_x) / CELULA_SIZE;
                         int row = (p.y - panel.down_y) / CELULA_SIZE;
-                    	double newX = panel.right_x + col * CELULA_SIZE;
+                        double newX = panel.right_x + col * CELULA_SIZE;
                         double newY = panel.down_y + row * CELULA_SIZE;
-                    	cells = getShipCells(newX,newY,pendingShip);
-                        Coordenadas coord = new Coordenadas(cells,panel.right_x,panel.down_y); 
-                        coord.coordenadaGraficaParaIndices(pendingShip); //envia as coords matriciais para a embarcacao
-                        notify.NotificaObserverTabu(tabuleiro,pendingShip);
+                        cells = getShipCells(newX, newY, pendingShip);
+                        Coordenadas coord = new Coordenadas(cells, panel.right_x, panel.down_y);
+                        coord.coordenadaGraficaParaIndices(pendingShip); // envia as coords matriciais para a embarcacao
+                        notify.NotificaObserverTabu(tabuleiro, pendingShip);
                         cells.clear();
                         tabuleiro.addNavios(pendingShip);
+                        pendingShip.setCor(originalColor); // Restore the original color
                         selectedShip = null;
                         pendingShip = null;
                         panel.repaint();
-                        
-                    }
-                    else if(selectedShip != null && pendingShip == null) {
-                    	selectedShip = null;
-                    }
-                    else {
-                    	selectedShip.restoreOriginalPosition();
-                        selectedShip.setCor(originalColor);
-                        System.out.println(selectedShip.getCor());
+                    } else if (selectedShip != null && pendingShip == null) {
+                        selectedShip.setCor(originalColor); // Restore the original color
+                        panel.repaint();
+                        selectedShip = null;
+                    } else {
+                        selectedShip.restoreOriginalPosition();
+                        selectedShip.setCor(originalColor); // Restore the original color
                         panel.repaint();
                         selectedShip = null;
                         pendingShip = null;
                     }
-                    
                 }
+                //panel.updateButtonState();
             }
         });
-        panel.setFocusable(true); 
-        panel.requestFocusInWindow();     
+
+        panel.setFocusable(true);
+        panel.requestFocusInWindow();
+    }
+
+    private Color getLighterColor(Color color) {
+        int r = color.getRed() + (255 - color.getRed()) / 2;
+        int g = color.getGreen() + (255 - color.getGreen()) / 2;
+        int b = color.getBlue() + (255 - color.getBlue()) / 2;
+        return new Color(r, g, b);
     }
     
     private List<Point> getShipCells(double x, double y, Navio ship) {
@@ -277,7 +285,7 @@ public class PrimFrame extends JFrame {
 
         for (Navio otherShip : ships) {
             if (otherShip != ship) {
-                if (shapesOverlap(ship.getShape(), otherShip.getShape()) || shapesAdjacent(ship.getShape(), otherShip.getShape())) {
+                if (shapesOverlap(ship.getShape(), otherShip.getShape()) || shapesAdjacent(ship, otherShip)) {
                     return false;
                 }
             }
@@ -290,17 +298,61 @@ public class PrimFrame extends JFrame {
         return s1.getBounds2D().intersects(s2.getBounds2D());
     }
 
-    private boolean shapesAdjacent(Shape s1, Shape s2) {
-        Rectangle2D bounds1 = s1.getBounds2D();
-        Rectangle2D bounds2 = s2.getBounds2D();
+    private boolean shapesAdjacent(Navio s1, Navio s2) {
+    	Shape shapeS1 = s1.getShape();
+    	Shape shapeS2 = s2.getShape();
+    	Rectangle2D bounds1 = shapeS1.getBounds2D();
+        Rectangle2D bounds2 = shapeS2.getBounds2D();
+        
+        if (s1.getTamanho() == 3) {
+        	Rectangle2D quadrado1 = new Rectangle2D.Double(
+        			bounds1.getX() - CELULA_SIZE,
+                    bounds1.getY(),
+                    bounds1.getWidth(),
+                    bounds1.getHeight() + CELULA_SIZE
+            );
+        	
+        	Rectangle2D quadrado2 = new Rectangle2D.Double(
+        			bounds1.getX(),
+                    bounds1.getY() - CELULA_SIZE,
+                    bounds1.getWidth(),
+                    bounds1.getHeight() + CELULA_SIZE
+            );
+        	Rectangle2D quadrado3 = new Rectangle2D.Double(
+        			bounds1.getX() + CELULA_SIZE,
+                    bounds1.getY(),
+                    bounds1.getWidth(),
+                    bounds1.getHeight() + CELULA_SIZE
+            );
+        }
+        if (s2.getTamanho() == 3) {
+        	Rectangle2D quadrado1s2 = new Rectangle2D.Double(
+        			bounds2.getX() - CELULA_SIZE,
+                    bounds2.getY(),
+                    bounds2.getWidth(),
+                    bounds2.getHeight() + CELULA_SIZE
+            );
+        	
+        	Rectangle2D quadrado2s2 = new Rectangle2D.Double(
+        			bounds2.getX(),
+                    bounds2.getY() - CELULA_SIZE,
+                    bounds2.getWidth(),
+                    bounds2.getHeight() + CELULA_SIZE
+            );
+        	Rectangle2D quadrado3s2 = new Rectangle2D.Double(
+        			bounds2.getX() + CELULA_SIZE,
+                    bounds2.getY(),
+                    bounds2.getWidth(),
+                    bounds2.getHeight() + CELULA_SIZE
+            );
+        }
 
-        bounds1 = new Rectangle2D.Double(
-            bounds1.getX() - CELULA_SIZE,
-            bounds1.getY() - CELULA_SIZE,
-            bounds1.getWidth() + 2 * CELULA_SIZE,
-            bounds1.getHeight() + 2 * CELULA_SIZE
-        );
-
+	    bounds1 = new Rectangle2D.Double(
+	        bounds1.getX() - CELULA_SIZE,
+	        bounds1.getY() - CELULA_SIZE,
+	        bounds1.getWidth() + 2 * CELULA_SIZE,
+	        bounds1.getHeight() + 2 * CELULA_SIZE
+	    );
         return bounds1.intersects(bounds2);
     }
 
@@ -339,38 +391,38 @@ public class PrimFrame extends JFrame {
 		return ships;
 	}
 
-
 	class PrimPanel extends JPanel {
 		AtkSingleton atk;
         JButton b1 = new JButton("Confirmar");
         TrocaContexto troca = new TrocaContexto();
         passaInfoATK atq = new passaInfoATK();
         int right_x = LARG_DEFAULT / 2;
-        int X = LARG_DEFAULT / 7;
-        int Y = ALT_DEFAULT / 7;
+        double X = LARG_DEFAULT / 7;
+        double Y = ALT_DEFAULT / 7;
         int down_y = ALT_DEFAULT / 7;
 
         public PrimPanel() {
         	atk = AtkSingleton.getInstance();
             initShips();
             setLayout(null);
+            //b1.setEnabled(false);
             add(b1);
             b1.setBounds(LARG_DEFAULT / 2, ALT_DEFAULT - 180, 80, 30);
             b1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //if (areAllShipsConfirmed()) {
-                    	troca.atualizaEstadoTab(tabuleiro, true);
-                    	atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
-                        PrimFrame.this.dispose();
-                        if(troca.getContProntos() == 2) {
-                        	troca.trocaPraAtaque(); //troca para tela de ataque
-                        }
-                    //} else {
-                        //JOptionPane.showMessageDialog(PrimFrame.this, "Posicione todas as armas antes de confirmar!");
-                    //}
-                }
+                    troca.atualizaEstadoTab(tabuleiro, true);
+                    atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
+                    PrimFrame.this.dispose();
+                    if(troca.getContProntos() == 2) {
+                        troca.trocaPraAtaque(); //troca para tela de ataque
+                    }
+               }
             });
+        }
+        
+        private void updateButtonState() {
+            b1.setEnabled(areAllShipsConfirmed());
         }
 
         private void initShips() {
@@ -401,6 +453,7 @@ public class PrimFrame extends JFrame {
                     X = 30 + (j * CELULA_SIZE * 2);
                 }
                 ship.setPosition(X, Y + 30);
+                ship.saveOriginalPosition(X, Y + 30);
                 j++;
                 if (total == 4 || total == 7 || total == 12 || total == 14 || total == 15) {
                     if (total != 15) {
@@ -458,8 +511,6 @@ public class PrimFrame extends JFrame {
                 g2d.draw(ship.getShape());
             }
         }
-        
-        
     }
 
     public static void main(String[] args) {
