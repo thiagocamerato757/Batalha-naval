@@ -17,11 +17,11 @@ public class BatalhaNaval implements OrbservaTabuleiro {
     	for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
             	tabuleiro[i][j] = 0;
-                System.out.print(tabuleiro[i][j]);
+                //System.out.print(tabuleiro[i][j]);
             }
-            System.out.println();
+            //System.out.println();
         }
-        System.out.println();
+        //System.out.println();
     }
     public ArrayList<Navio> getNavios() {
     	return this.navios;
@@ -38,11 +38,11 @@ public class BatalhaNaval implements OrbservaTabuleiro {
     public static void exibirTabuleiro(int[][] tabuleiro) {
         for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
-                System.out.print(tabuleiro[i][j]);
+                //System.out.print(tabuleiro[i][j]);
             }
-            System.out.println();
+            //System.out.println();
         }
-        System.out.println();
+        //System.out.println();
     }
     
     public void AtualizaTab_Pos(Navio ship){ //implemetacao da interface
@@ -55,9 +55,9 @@ public class BatalhaNaval implements OrbservaTabuleiro {
     	
     	for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
-                System.out.print(tabuleiro[j][i] + " ");
+                //System.out.print(tabuleiro[j][i] + " ");
             }
-            System.out.println();
+            //System.out.println();
         }
     	
     }

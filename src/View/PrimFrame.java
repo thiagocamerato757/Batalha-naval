@@ -300,7 +300,6 @@ public class PrimFrame extends JFrame {
     }
 
     private boolean isOverlapping(double x, double y, Navio ship) {
-        
         List<Point> coord = getShipCells(x, y, ship);
 		List<Point> otherCoord = null;
 		Coordenadas coordenadas;
@@ -355,16 +354,16 @@ public class PrimFrame extends JFrame {
             b1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (areAllShipsConfirmed()) {
+                    //if (areAllShipsConfirmed()) {
                     	troca.atualizaEstadoTab(tabuleiro, true);
                     	atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
                         PrimFrame.this.dispose();
                         if(troca.getContProntos() == 2) {
                         	troca.trocaPraAtaque(); //troca para tela de ataque
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(PrimFrame.this, "Posicione todas as armas antes de confirmar!");
-                    }
+                    //} else {
+                        //JOptionPane.showMessageDialog(PrimFrame.this, "Posicione todas as armas antes de confirmar!");
+                    //}
                 }
             });
         }
@@ -448,7 +447,6 @@ public class PrimFrame extends JFrame {
             }
 
             for (Navio ship : ships) {
-            	
             	g2d.setColor(ship.getCor());
                 g2d.fill(ship.getShape());
                 g2d.setColor(Color.BLACK);
