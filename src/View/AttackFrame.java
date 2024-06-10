@@ -58,7 +58,6 @@ public class AttackFrame extends JFrame {
                 }
                 if (max_tiros == 3) {
                 	vezJogador = passaVez();
-                
                 	max_tiros = 0;
                 }
                 panel.repaint();
