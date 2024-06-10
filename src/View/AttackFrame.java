@@ -3,6 +3,8 @@ package View;
 import javax.swing.*;
 import Model.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -24,71 +26,109 @@ public class AttackFrame extends JFrame {
     public final int NUMERO_LINHAS = 16;
     AttackPanel panel;
     private Point p;
-    private passaInfoATK vezJogador = new passaInfoATK();
+    private boolean vezJogador = true;
+    Color shotColor = null;
+    int max_tiros = 0;
+    String nomeJogador;
+    
+    protected boolean passaVez() {
+		return !vezJogador;
+	}
 
+    public void setNomeJogador(String nomeJogador) {
+        this.nomeJogador = nomeJogador;
+    }
+    
     public AttackFrame(String s) {
         super(s);
         setSize(d);
         panel = new AttackPanel();
         getContentPane().add(panel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 p = e.getPoint();
-
-                int col = ((p.x - panel.right_x) / CELULA_SIZE) - 1;
-                int row = ((p.y - panel.down_y) / CELULA_SIZE) - 1;
-                Point coordTabu = new Point(col, row);
-                if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS) {
-                    if (vezJogador.isVez1()) {
-                        Color shotColor = Color.CYAN;
-                        for (Navio ship : opponentShips2) {
-                            if (ship.getCoordenadas().contains(coordTabu)) {
-                            	shotColor = Color.gray;
-                            	if (isShipSunk(ship.getCoordenadas(), tiros1)) {
-                            		shotColor = Color.BLACK;
-                            	}
-                                System.out.println("Você atingiu um " + ship.getTipo());
-                                break;
-                            }
-                        }
-                        tiros1.put(coordTabu, shotColor);
-                    } else {
-                        Color shotColor = Color.CYAN;
-                        for (Navio ship : opponentShips1) {
-                            if (ship.getCoordenadas().contains(coordTabu)) {
-                                shotColor = Color.BLACK;
-                                System.out.println("Você atingiu um " + ship.getTipo());
-                                break;
-                            }
-                        }
-                        tiros2.put(coordTabu, shotColor);
-                    }
-                    panel.repaint();
+                max_tiros++;
+                if (vezJogador) {
+                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
+                } else {
+                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
                 }
+                if (max_tiros == 3) {
+                	vezJogador = passaVez();
+                
+                	max_tiros = 0;
+                }
+                panel.repaint();
             }
         });
     }
-    
+
+    private void handleShot(Map<Point, Color> tiros, List<Navio> opponentShips, int boardXOffset, int boardYOffset, Point p) {
+        int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
+        int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
+        Point coordTabu = new Point(col, row);
+        
+	        if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS && tiros.get(coordTabu) == null) {
+	        	boolean hit = false;
+	            for (Navio ship : opponentShips) {
+	                if (ship.getCoordenadas().contains(coordTabu)) {
+	                    tiros.put(coordTabu, Color.GRAY);
+	                    if (isShipSunk(ship.getCoordenadas(), tiros)) {
+	                        for (Point part : ship.getCoordenadas()) {
+	                            tiros.put(part, Color.BLACK);
+	                        }
+	                        System.out.println("Você afundou um " + ship.getTipo());
+	                    }
+	                    else{
+	                    	System.out.println("Você atingiu um " + ship.getTipo());
+	                    }
+	                    hit = true;
+	                    break;
+	                }
+	            }
+	            if (!hit) {
+	                tiros.put(coordTabu, Color.CYAN);
+	                System.out.println("Você atingiu a água");
+	            }
+	        }
+    }
+
     private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
         for (Point coord : shipCoords) {
-            if (!shots.containsKey(coord)) {
-                return false; // Se algum ponto do navio não foi atingido, o navio não foi afundado
+            if (!shots.containsKey(coord) || shots.get(coord) != Color.GRAY) {
+                return false;
             }
         }
-        return true; // Se todos os pontos do navio foram atingidos, o navio foi afundado
+        return true;
     }
 
     class AttackPanel extends JPanel {
         int right_x = LARG_DEFAULT / 2;
         int down_y = ALT_DEFAULT / 7;
         int secondBoardXOffset = right_x - (NUMERO_COLUNAS + 2) * CELULA_SIZE;
-
+        
+        JButton confirm = new JButton ("Confirmar");
+        public AttackPanel() {
+            setLayout(null);
+            confirm.setBounds(LARG_DEFAULT / 2 - 40, ALT_DEFAULT - 180, 80, 30);
+            add(confirm);
+            confirm.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    shotColor = null;
+                    panel.repaint();
+                }
+            });
+        }
+        
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
+            g2d.drawString(nomeJogador + " posicione suas armas", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
             drawBoard(g2d, right_x, down_y);
             drawBoard(g2d, secondBoardXOffset, down_y);
             drawShots(g2d, right_x, down_y, tiros1);
