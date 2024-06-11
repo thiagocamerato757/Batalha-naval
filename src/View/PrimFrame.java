@@ -384,8 +384,7 @@ public class PrimFrame extends JFrame {
             }
         }
         return true;
-    }
-    	
+    }	
     
     protected ArrayList<Navio> getShips() {
 		return ships;

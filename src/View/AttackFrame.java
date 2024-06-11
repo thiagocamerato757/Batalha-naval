@@ -3,7 +3,7 @@ package View;
 import javax.swing.*;
 import Model.*;
 import View.PrimFrame.PrimPanel;
-
+import Model.BatalhaNaval;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,20 +26,28 @@ public class AttackFrame extends JFrame {
     public final int CELULA_SIZE = 30;
     public final int NUMERO_COLUNAS = 16;
     public final int NUMERO_LINHAS = 16;
+    private BatalhaNaval bat = new BatalhaNaval();
+    private int navios_restantes = bat.getNaviosRestantes();
     AttackPanel panel;
     private Point p;
-    private boolean vezJogador = true;
+    private boolean vezJogador = true, blocked1 = true, blocked2 = true;
     Color shotColor = null;
     int max_tiros = 1;
-    String nomeJogador;
-    private JLabel statusLabel, turnLabel;
+    String nomeJogador1, nomeJogador2;
+    private JLabel statusLabel, turnLabel, blockedLabel;
+    JButton unblock, start, hide;
+    
     
     protected boolean passaVez() {
         return !vezJogador;
     }
 
-    public void setNomeJogador(String nomeJogador) {
-        this.nomeJogador = nomeJogador;
+    public void setNomeJogador1(String nomeJogador1) {
+        this.nomeJogador1 = nomeJogador1;
+    }
+    
+    public void setNomeJogador2(String nomeJogador2) {
+        this.nomeJogador2 = nomeJogador2;
     }
     
     public AttackFrame(String s) {
@@ -52,31 +60,41 @@ public class AttackFrame extends JFrame {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                p = e.getPoint();
-                if (vezJogador) {
-                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
-                } else {
-                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
-                }
-                panel.repaint();
+            	if (blocked1 == false || blocked2 == false) {
+	                p = e.getPoint();
+	                if (vezJogador) {
+	                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
+	                    panel.repaint();
+	                    if (playerWin(opponentShips2, 1)) {
+	                    	JOptionPane.showMessageDialog(AttackFrame.this, "Jogador 1 ganhou o jogo!!");
+	                    }
+	                } else {
+	                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
+	                    panel.repaint();
+	                    if (playerWin(opponentShips1, 1)) {
+	                    	JOptionPane.showMessageDialog(AttackFrame.this, "Jogador 2 ganhou o jogo!!");
+	                    }
+	                }
+            	}
             }
         });
     }
 
     private void handleShot(Map<Point, Color> tiros, List<Navio> opponentShips, int boardXOffset, int boardYOffset, Point p) {
-        int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
+        statusLabel.setVisible(true);
+    	int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
         int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
         Point coordTabu = new Point(col, row);
-        if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS && tiros.get(coordTabu) == null) {
+        if (col >= 0 && col < NUMERO_COLUNAS - 1 && row >= 0 && row < NUMERO_LINHAS - 1 && tiros.get(coordTabu) == null && max_tiros<=3) {
         	if (max_tiros == 3) {
-                vezJogador = passaVez();
-                max_tiros = 0;
+        		hide.setVisible(true);
             }
             boolean hit = false;
             for (Navio ship : opponentShips) {
                 if (ship.getCoordenadas().contains(coordTabu)) {
                     tiros.put(coordTabu, Color.GRAY);
                     if (isShipSunk(ship.getCoordenadas(), tiros)) {
+                    	ship.setSunk(true);
                         for (Point part : ship.getCoordenadas()) {
                             tiros.put(part, Color.BLACK);
                         }
@@ -104,26 +122,88 @@ public class AttackFrame extends JFrame {
         }
         return true;
     }
+    
+    private boolean playerWin(List<Navio> opponentShip, int num_navios) {
+    	for (Navio ship : opponentShip) {
+    		if (ship.isSunk()) {
+    			num_navios--;
+    		}
+    	}
+    	if (num_navios == 0) {
+    		hide.setVisible(false);
+    		return true;
+    	}
+    	return false;
+    }
 
     class AttackPanel extends JPanel {
         int right_x = LARG_DEFAULT / 2;
         int down_y = ALT_DEFAULT / 7;
         int secondBoardXOffset = right_x - (NUMERO_COLUNAS + 2) * CELULA_SIZE;
         
-        JButton confirm = new JButton("Confirmar");
         public AttackPanel() {
+        	blockedLabel = new JLabel("aperta o botão para desbloquear sua visão");
+        	blockedLabel.setBounds(LARG_DEFAULT / 2 - 150, ALT_DEFAULT - 300, 600, 20);
+        	blockedLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        	blockedLabel.setVisible(false);
+        	add(blockedLabel);
+        	unblock = new JButton("Desbloquear visão");
             setLayout(null);
-            confirm.setBounds(LARG_DEFAULT / 2 - 40, ALT_DEFAULT - 180, 80, 30);
-            add(confirm);
-            confirm.addActionListener(new ActionListener() {
+            unblock.setBounds(LARG_DEFAULT / 2 - 60, ALT_DEFAULT - 180, 150, 30);
+            add(unblock);
+            unblock.setVisible(false);
+            unblock.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    shotColor = null;
+                    vezJogador = passaVez();
+                    if (vezJogador) {
+                    	blocked1 = false;
+                    	blocked2 = true;
+                    }
+                    else {
+                    	blocked1 = true;
+                    	blocked2 = false;
+                    }
+                    max_tiros = 1;
+                    unblock.setVisible(false);
+                    blockedLabel.setVisible(false);
                     panel.repaint();
                 }
             });
+            start = new JButton("Começar jogo!");
+            setLayout(null);
+            start.setBounds(LARG_DEFAULT / 2 - 60, ALT_DEFAULT - 180, 150, 30);
+            add(start);
+            start.addActionListener(new ActionListener() {
+            	@Override
+            	public void actionPerformed(ActionEvent e) {
+            		start.setVisible(false);
+            		blocked1 = false;
+            		panel.repaint();
+            	}
+            });
+
+            hide = new JButton("Próximo Jogador");
+            setLayout(null);
+            hide.setBounds(LARG_DEFAULT / 2 - 60, ALT_DEFAULT - 180, 150, 30);
+            hide.setVisible(false);
+            add(hide);
+            hide.addActionListener(new ActionListener() {
+            	@Override
+            	public void actionPerformed(ActionEvent e) {
+            		blocked1 = true;
+            		blocked2 = true;
+            		hide.setVisible(false);
+            		unblock.setVisible(true);
+            		blockedLabel.setVisible(true);
+            		statusLabel.setVisible(false);
+            		panel.repaint();
+            	}
+            });
+           
             statusLabel = new JLabel("");
             statusLabel.setBounds(LARG_DEFAULT / 2 - 120, ALT_DEFAULT - 300, 300, 20);
+            statusLabel.setForeground(Color.RED);
             statusLabel.setFont(new Font("Arial", Font.BOLD, 18));
             add(statusLabel);
             
@@ -137,19 +217,19 @@ public class AttackFrame extends JFrame {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
-            drawBoard(g2d, right_x, down_y);
-            drawBoard(g2d, secondBoardXOffset, down_y);
-            drawShots(g2d, right_x, down_y, tiros1);
-            drawShots(g2d, secondBoardXOffset, down_y, tiros2);
+            drawBoard(g2d, right_x, down_y, blocked1);
+            drawBoard(g2d, secondBoardXOffset, down_y, blocked2);
             if (vezJogador) {
             	turnLabel.setText("É o turno de: Jogador 1"); //Lembrar de adicionar o nome do jogador
+            	drawShots(g2d, right_x, down_y, tiros1, blocked1);
             }
             else {
             	turnLabel.setText("É o turno de: Jogador 2");
+            	drawShots(g2d, secondBoardXOffset, down_y, tiros2, blocked2);
             }
         }
 
-        private void drawBoard(Graphics2D g2d, int startX, int startY) {
+        private void drawBoard(Graphics2D g2d, int startX, int startY, boolean blocked) {
             for (int row = 0; row < NUMERO_LINHAS; row++) {
                 for (int col = 0; col < NUMERO_COLUNAS; col++) {
                     int x = startX + (col * CELULA_SIZE);
@@ -157,7 +237,12 @@ public class AttackFrame extends JFrame {
 
                     if (row != 0 && col != 0) {
                         Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-                        g2d.setColor(Color.WHITE);
+                        if (blocked) {
+                        	g2d.setColor(Color.cyan.darker());
+                        }
+                        else {
+                        	g2d.setColor(Color.white);
+                        }
                         g2d.fill(cell);
                         g2d.setColor(Color.BLACK);
                         g2d.draw(cell);
@@ -176,16 +261,19 @@ public class AttackFrame extends JFrame {
             }
         }
 
-        private void drawShots(Graphics2D g2d, int startX, int startY, Map<Point, Color> shots) {
+        private void drawShots(Graphics2D g2d, int startX, int startY, Map<Point, Color> shots, boolean blocked) {
             for (Map.Entry<Point, Color> entry : shots.entrySet()) {
                 Point shot = entry.getKey();
                 Color color = entry.getValue();
                 int x = startX + (shot.x * CELULA_SIZE) + CELULA_SIZE;
                 int y = startY + (shot.y * CELULA_SIZE) + CELULA_SIZE;
                 Rectangle2D.Double cell = new Rectangle2D.Double(x, y, CELULA_SIZE, CELULA_SIZE);
-
-                g2d.setColor(color);
-                g2d.fill(cell);
+                if (!blocked) {
+	                g2d.setColor(color);
+	                g2d.fill(cell);
+	                g2d.setColor(Color.BLACK);
+	                g2d.draw(cell);
+                }
             }
         }
     }

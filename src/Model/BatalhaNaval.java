@@ -23,6 +23,10 @@ public class BatalhaNaval implements OrbservaTabuleiro {
         }
         //System.out.println();
     }
+    
+    public int getNaviosRestantes() {
+    	return this.naviosRestantes;
+    }
     public ArrayList<Navio> getNavios() {
     	return this.navios;
     }

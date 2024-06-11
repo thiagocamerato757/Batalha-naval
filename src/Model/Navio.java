@@ -17,19 +17,9 @@ public class Navio {
     private List<Point> coordenadas = new ArrayList<>();
     private int countRotation = 0;
     private double originalX, originalY;
-    private boolean isHit, isSunk;
-    
-	public boolean isHit(Navio navio) {
-		navio.setCor(Color.gray);
-		return isHit;
-	}
+    private boolean isSunk;
 
-	public void setHit(boolean isHit) {
-		this.isHit = isHit;
-	}
-
-	public boolean isSunk(Navio navio) {
-		navio.setCor(Color.black);
+	public boolean isSunk() {
 		return isSunk;
 	}
 
@@ -40,9 +30,9 @@ public class Navio {
 	public enum TipodeNavio {
         submarino,
         destroyer,
-        hidroaviao,
+        hidroavião,
         cruzador,
-        couracado;
+        couraçado;
     }
 	
 	public List<Point> getCoordenadas() {
