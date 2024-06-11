@@ -2,6 +2,8 @@ package View;
 
 import javax.swing.*;
 import Model.*;
+import View.PrimFrame.PrimPanel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +32,7 @@ public class AttackFrame extends JFrame {
     Color shotColor = null;
     int max_tiros = 1;
     String nomeJogador;
-    private JLabel statusLabel;
+    private JLabel statusLabel, turnLabel;
     
     protected boolean passaVez() {
         return !vezJogador;
@@ -56,7 +58,6 @@ public class AttackFrame extends JFrame {
                 } else {
                     handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
                 }
-                
                 panel.repaint();
             }
         });
@@ -66,11 +67,11 @@ public class AttackFrame extends JFrame {
         int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
         int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
         Point coordTabu = new Point(col, row);
-        if (max_tiros == 3) {
-            vezJogador = passaVez();
-            max_tiros = 0;
-        }
         if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS && tiros.get(coordTabu) == null) {
+        	if (max_tiros == 3) {
+                vezJogador = passaVez();
+                max_tiros = 0;
+            }
             boolean hit = false;
             for (Navio ship : opponentShips) {
                 if (ship.getCoordenadas().contains(coordTabu)) {
@@ -122,11 +123,12 @@ public class AttackFrame extends JFrame {
                 }
             });
             statusLabel = new JLabel("");
-            statusLabel.setBounds(LARG_DEFAULT / 2 - 70, ALT_DEFAULT - 300, 200, 20);
+            statusLabel.setBounds(LARG_DEFAULT / 2 - 120, ALT_DEFAULT - 300, 300, 20);
             statusLabel.setFont(new Font("Arial", Font.BOLD, 18));
             add(statusLabel);
-            JLabel turnLabel = new JLabel("É o turno de: " + nomeJogador);
-            turnLabel.setBounds(LARG_DEFAULT / 2 - 70, 100, 200, 20);
+            
+            turnLabel = new JLabel("");
+            turnLabel.setBounds(LARG_DEFAULT / 2 - 120, 100, 400, 20);
             turnLabel.setFont(new Font("Arial", Font.BOLD, 18));
             add(turnLabel);
         }
@@ -135,11 +137,16 @@ public class AttackFrame extends JFrame {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
-            g2d.drawString(nomeJogador + " escolha onde quer atirar", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
             drawBoard(g2d, right_x, down_y);
             drawBoard(g2d, secondBoardXOffset, down_y);
             drawShots(g2d, right_x, down_y, tiros1);
             drawShots(g2d, secondBoardXOffset, down_y, tiros2);
+            if (vezJogador) {
+            	turnLabel.setText("É o turno de: Jogador 1"); //Lembrar de adicionar o nome do jogador
+            }
+            else {
+            	turnLabel.setText("É o turno de: Jogador 2");
+            }
         }
 
         private void drawBoard(Graphics2D g2d, int startX, int startY) {
