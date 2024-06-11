@@ -28,7 +28,7 @@ public class AttackFrame extends JFrame {
     private Point p;
     private boolean vezJogador = true;
     Color shotColor = null;
-    int max_tiros = 0;
+    int max_tiros = 1;
     String nomeJogador;
     
     protected boolean passaVez() {
@@ -50,16 +50,12 @@ public class AttackFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 p = e.getPoint();
-                max_tiros++;
                 if (vezJogador) {
                     handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
                 } else {
                     handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
                 }
-                if (max_tiros == 3) {
-                	vezJogador = passaVez();
-                	max_tiros = 0;
-                }
+    	        
                 panel.repaint();
             }
         });
@@ -69,7 +65,10 @@ public class AttackFrame extends JFrame {
         int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
         int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
         Point coordTabu = new Point(col, row);
-        
+        if (max_tiros == 3) {
+        	vezJogador = passaVez();
+        	max_tiros = 0;
+        }
 	        if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS && tiros.get(coordTabu) == null) {
 	        	boolean hit = false;
 	            for (Navio ship : opponentShips) {
@@ -92,6 +91,7 @@ public class AttackFrame extends JFrame {
 	                tiros.put(coordTabu, Color.CYAN);
 	                System.out.println("Você atingiu a água");
 	            }
+	            max_tiros++;
 	        }
     }
 
