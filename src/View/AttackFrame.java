@@ -30,10 +30,11 @@ public class AttackFrame extends JFrame {
     Color shotColor = null;
     int max_tiros = 1;
     String nomeJogador;
+    private JLabel statusLabel;
     
     protected boolean passaVez() {
-		return !vezJogador;
-	}
+        return !vezJogador;
+    }
 
     public void setNomeJogador(String nomeJogador) {
         this.nomeJogador = nomeJogador;
@@ -55,7 +56,7 @@ public class AttackFrame extends JFrame {
                 } else {
                     handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
                 }
-    	        
+                
                 panel.repaint();
             }
         });
@@ -66,33 +67,32 @@ public class AttackFrame extends JFrame {
         int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
         Point coordTabu = new Point(col, row);
         if (max_tiros == 3) {
-        	vezJogador = passaVez();
-        	max_tiros = 0;
+            vezJogador = passaVez();
+            max_tiros = 0;
         }
-	        if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS && tiros.get(coordTabu) == null) {
-	        	boolean hit = false;
-	            for (Navio ship : opponentShips) {
-	                if (ship.getCoordenadas().contains(coordTabu)) {
-	                    tiros.put(coordTabu, Color.GRAY);
-	                    if (isShipSunk(ship.getCoordenadas(), tiros)) {
-	                        for (Point part : ship.getCoordenadas()) {
-	                            tiros.put(part, Color.BLACK);
-	                        }
-	                        System.out.println("Você afundou um " + ship.getTipo());
-	                    }
-	                    else{
-	                    	System.out.println("Você atingiu um " + ship.getTipo());
-	                    }
-	                    hit = true;
-	                    break;
-	                }
-	            }
-	            if (!hit) {
-	                tiros.put(coordTabu, Color.CYAN);
-	                System.out.println("Você atingiu a água");
-	            }
-	            max_tiros++;
-	        }
+        if (col >= 0 && col < NUMERO_COLUNAS && row >= 0 && row < NUMERO_LINHAS && tiros.get(coordTabu) == null) {
+            boolean hit = false;
+            for (Navio ship : opponentShips) {
+                if (ship.getCoordenadas().contains(coordTabu)) {
+                    tiros.put(coordTabu, Color.GRAY);
+                    if (isShipSunk(ship.getCoordenadas(), tiros)) {
+                        for (Point part : ship.getCoordenadas()) {
+                            tiros.put(part, Color.BLACK);
+                        }
+                        statusLabel.setText("Você afundou um " + ship.getTipo());
+                    } else {
+                        statusLabel.setText("Você atingiu um " + ship.getTipo());
+                    }
+                    hit = true;
+                    break;
+                }
+            }
+            if (!hit) {
+                tiros.put(coordTabu, Color.cyan.darker());
+                statusLabel.setText("Você atingiu a água");
+            }
+            max_tiros++;
+        }
     }
 
     private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
@@ -109,7 +109,7 @@ public class AttackFrame extends JFrame {
         int down_y = ALT_DEFAULT / 7;
         int secondBoardXOffset = right_x - (NUMERO_COLUNAS + 2) * CELULA_SIZE;
         
-        JButton confirm = new JButton ("Confirmar");
+        JButton confirm = new JButton("Confirmar");
         public AttackPanel() {
             setLayout(null);
             confirm.setBounds(LARG_DEFAULT / 2 - 40, ALT_DEFAULT - 180, 80, 30);
@@ -121,13 +121,21 @@ public class AttackFrame extends JFrame {
                     panel.repaint();
                 }
             });
+            statusLabel = new JLabel("");
+            statusLabel.setBounds(LARG_DEFAULT / 2 - 70, ALT_DEFAULT - 300, 200, 20);
+            statusLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            add(statusLabel);
+            JLabel turnLabel = new JLabel("É o turno de: " + nomeJogador);
+            turnLabel.setBounds(LARG_DEFAULT / 2 - 70, 100, 200, 20);
+            turnLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            add(turnLabel);
         }
         
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
-            g2d.drawString(nomeJogador + " posicione suas armas", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
+            g2d.drawString(nomeJogador + " escolha onde quer atirar", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
             drawBoard(g2d, right_x, down_y);
             drawBoard(g2d, secondBoardXOffset, down_y);
             drawShots(g2d, right_x, down_y, tiros1);
