@@ -8,6 +8,8 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import Model.Navio;
 import Model.BatalhaNaval;
+import Model.BatalhaNavalFacade;
+
 import java.util.List;
 
 public class PrimFrame extends JFrame {
@@ -24,7 +26,7 @@ public class PrimFrame extends JFrame {
     public final int NUMERO_LINHAS = 16;
     String nomeJogador;
     private Point p;
-    private BatalhaNaval tabuleiro = new BatalhaNaval();
+    private BatalhaNavalFacade tabuleiro = new BatalhaNavalFacade();
     
     PrimPanel panel;
 
@@ -104,7 +106,6 @@ public class PrimFrame extends JFrame {
                         coord.coordenadaGraficaParaIndices(pendingShip); // envia as coords matriciais para a embarcacao
                         notify.NotificaObserverTabu(tabuleiro, pendingShip);
                         cells.clear();
-                        tabuleiro.addNavios(pendingShip);
                         pendingShip.setCor(originalColor); // Restore the original color
                         selectedShip = null;
                         pendingShip = null;
@@ -121,7 +122,7 @@ public class PrimFrame extends JFrame {
                         pendingShip = null;
                     }
                 }
-                //panel.updateButtonState();
+                panel.updateButtonState();
             }
         });
 
@@ -142,7 +143,7 @@ public class PrimFrame extends JFrame {
         List<Point> cells = new ArrayList<>();
 
         if (tamanho == 3 && ship.getShape() instanceof Path2D.Double) {
-            // Hidroavião
+            // HidroaviÃ£o
             switch (rotation) {
                 case 0: // Normal
                     cells.add(new Point((int) x, (int) y));
@@ -384,7 +385,8 @@ public class PrimFrame extends JFrame {
             }
         }
         return true;
-    }	
+    }
+    	
     
     protected ArrayList<Navio> getShips() {
 		return ships;
@@ -413,7 +415,7 @@ public class PrimFrame extends JFrame {
                     troca.atualizaEstadoTab(tabuleiro, true);
                     atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
                     PrimFrame.this.dispose();
-                    if(troca.getContProntos() == 2) {
+                    if(TrocaContexto.getContProntos() == 2) {
                         troca.trocaPraAtaque(); //troca para tela de ataque
                     }
                }
@@ -432,13 +434,13 @@ public class PrimFrame extends JFrame {
                 ships.add(new Navio(2)); // Destroyer
             }
             for (int i = 0; i < 5; i++) {
-                ships.add(new Navio(3)); // Hidroavião
+                ships.add(new Navio(3)); // HidroaviÃ£o
             }
             for (int i = 0; i < 2; i++) {
                 ships.add(new Navio(4)); // Cruzador
             }
             for (int i = 0; i < 1; i++) {
-                ships.add(new Navio(5)); // Couraçado
+                ships.add(new Navio(5)); // CouraÃ§ado
             }
             int espaco = 60;
             int total = 1;

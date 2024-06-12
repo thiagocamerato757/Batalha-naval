@@ -1,6 +1,9 @@
 package View;
 
 import javax.swing.*;
+
+import Controller.Jogo;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -43,15 +46,8 @@ public class InicialFrame extends JFrame {
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NomeForm nomeForm = new NomeForm();
-                String nomeJogador1 = nomeForm.getJogador1();
-                String nomeJogador2 = nomeForm.getJogador2();
-
-                if (nomeJogador1 != null && nomeJogador2 != null) {
-                    // Iniciar o jogo com os nomes dos jogadores
-                    System.out.println(nomeJogador1);
-                    System.out.println(nomeJogador2);
-                } 
+                Jogo game = new Jogo();
+                InicialFrame.this.dispose();
             }
         });
 

@@ -1,17 +1,19 @@
 package Model;
+import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import Model.Navio;
 
-public class BatalhaNaval implements OrbservaTabuleiro {
+import View.Coordenadas;
+
+public class BatalhaNaval {
     private static final int TAMANHO_TABULEIRO = 15;
-    private static final int NUM_NAVIOS = 15;
+    private final int NUM_NAVIOS = 15;
     private final int[][] tabuleiro = new int[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
-    private static int qtd_tiros = 0;
-    private static int naviosRestantes = NUM_NAVIOS;
+    private int qtd_tiros = 0;
+    private int naviosRestantes = NUM_NAVIOS;
     private ArrayList<Navio> navios = new ArrayList<>();
-    private boolean posicaoPronta = false;
     
     public BatalhaNaval() {
     	for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
@@ -23,25 +25,41 @@ public class BatalhaNaval implements OrbservaTabuleiro {
         }
         //System.out.println();
     }
-    
-    public int getNaviosRestantes() {
-    	return this.naviosRestantes;
-    }
-    public ArrayList<Navio> getNavios() {
+    protected ArrayList<Navio> getNavios() {
     	return this.navios;
     }
     
-    public void setNavios(ArrayList<Navio>navios) {
+    public int getnaviosRestantes() {
+    	return this.naviosRestantes;
+    }
+    
+    protected void setNavios(ArrayList<Navio>navios) {
     	this.navios = navios;
     }
     
-    public void addNavios(Navio navio) {
+    protected void addNavios(Navio navio) {
     	this.navios.add(navio);
     }
     
-    public static void exibirTabuleiro(int[][] tabuleiro) {
-        for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
-            for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+    protected int getQtd_tiros() {
+		return qtd_tiros;
+	}
+	protected void setQtd_tiros(int qtd_tiros) {
+		this.qtd_tiros = qtd_tiros;
+	}
+	
+	protected int getTAMANHO_TABULEIRO() {
+		return TAMANHO_TABULEIRO;
+	}
+	protected int getNUM_NAVIOS() {
+		return NUM_NAVIOS;
+	}
+	protected void setNaviosRestantes(int naviosRestantes) {
+		this.naviosRestantes = naviosRestantes;
+	}
+	protected void exibirTabuleiro(int[][] tabuleiro) {
+        for (int i = 0; i < BatalhaNaval.TAMANHO_TABULEIRO; i++) {
+            for (int j = 0; j < BatalhaNaval.TAMANHO_TABULEIRO; j++) {
                 //System.out.print(tabuleiro[i][j]);
             }
             //System.out.println();
@@ -49,30 +67,28 @@ public class BatalhaNaval implements OrbservaTabuleiro {
         //System.out.println();
     }
     
-    public void AtualizaTab_Pos(Navio ship){ //implemetacao da interface
-    	navios.add(ship);
-    	for(int i = 0; i < this.navios.size(); i++) {
-    		for(int j = 0; j < this.navios.get(i).getCoordenadas().size(); j++) {
-    			this.tabuleiro[this.navios.get(i).getCoordenadas().get(j).x][this.navios.get(i).getCoordenadas().get(j).y] = this.navios.get(i).getTamanho();
-    		}
-    	}
-    	
-    	for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
-            for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
-                //System.out.print(tabuleiro[j][i] + " ");
+    protected static int getTamanhoTabuleiro() {
+		return TAMANHO_TABULEIRO;
+	}
+    protected void AtualizaTab_Pos(Navio navio) {
+        int[][] tabuleiro = getTabuleiro();
+        List<Point> coordenadas = navio.getCoordenadas();
+        
+        for (Point coord : coordenadas) {
+            int x = (int) coord.getX();
+            int y = (int) coord.getY();
+            
+            // Verificação dos limites do tabuleiro
+            if (x < 0 || x >= tabuleiro.length || y < 0 || y >= tabuleiro[0].length) {
+                System.out.println("Coordenada fora dos limites: (" + x + ", " + y + ")");
+                throw new ArrayIndexOutOfBoundsException("Coordenada fora dos limites: (" + x + ", " + y + ")");
             }
-            //System.out.println();
+            
+            tabuleiro[x][y] = 1; // Supondo que 1 indica a presença de um navio
         }
-    	
     }
+
     
-    protected boolean getEstadoPos() {
-    	return this.posicaoPronta;
-    }
-    
-    protected void setEstadoPos(boolean TF) {
-    	this.posicaoPronta = TF;
-    }
     //#TODO : aleterar essa funcao para a partida 
 	/*
 	 * private static int realizarJogada(char[][] tabuleiro, int naviosRestantes) {
@@ -144,5 +160,11 @@ public class BatalhaNaval implements OrbservaTabuleiro {
 	 * public static void setQtd_tiros2(int qtd_tiros2) { BatalhaNaval.qtd_tiros2 =
 	 * qtd_tiros2; }
 	 */
+	protected int[][] getTabuleiro() {
+		return this.tabuleiro;
+	}
+	protected int getNaviosRestantes() {
+		// TODO Auto-generated method stub
+		return this.naviosRestantes;
+	}
 }
-

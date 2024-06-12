@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 import View.*;
 
 public class Jogo {
-	public static void main (String[] arqs) {
+	public Jogo() {
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

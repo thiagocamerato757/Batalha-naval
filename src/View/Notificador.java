@@ -5,10 +5,9 @@ import Model.OrbservaTabuleiro;
 
 public class Notificador implements ObservadoTabuleiro {
 
-	@Override
-	public void NotificaObserverTabu(OrbservaTabuleiro obs,Navio ship) {
-		
-		obs.AtualizaTab_Pos(ship);
-	}
+    @Override
+    public boolean NotificaObserverTabu(OrbservaTabuleiro obs,Navio ship) {
+        return obs.placeShip(ship);
+    }
 
 }
