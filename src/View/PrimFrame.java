@@ -31,7 +31,6 @@ public class PrimFrame extends JFrame {
 
     public void setNomeJogador(String nomeJogador) {
         this.tabuleiro.setNome(nomeJogador);
-        System.out.println(nomeJogador);
     }
     
     public String getNomeJogador() {
@@ -127,7 +126,7 @@ public class PrimFrame extends JFrame {
                         pendingShip = null;
                     }
                 }
-                //panel.updateButtonState();
+                panel.updateButtonState();
             }
         });
 
@@ -411,7 +410,7 @@ public class PrimFrame extends JFrame {
         	atk = AtkSingleton.getInstance();
             initShips();
             setLayout(null);
-            //b1.setEnabled(false);
+            b1.setEnabled(false);
             add(b1);
             b1.setBounds(LARG_DEFAULT / 2, ALT_DEFAULT - 180, 80, 30);
             b1.addActionListener(new ActionListener() {

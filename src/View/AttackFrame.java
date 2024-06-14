@@ -26,8 +26,8 @@ public class AttackFrame extends JFrame {
     public final int CELULA_SIZE = 30;
     public final int NUMERO_COLUNAS = 16;
     public final int NUMERO_LINHAS = 16;
-    private BatalhaNaval bat = new BatalhaNaval();
-    private int navios_restantes = bat.getnaviosRestantes();
+    private BatalhaNavalFacade bat = new BatalhaNavalFacade();
+    private int navios_restantes = bat.getNaviosRestantes();
     AttackPanel panel;
     private Point p;
     private boolean vezJogador = true, blocked1 = true, blocked2 = true;
