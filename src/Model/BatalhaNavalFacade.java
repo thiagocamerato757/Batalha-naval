@@ -7,8 +7,18 @@ public class BatalhaNavalFacade implements OrbservaTabuleiro {
     private enum Mode { POSITIONING, ATTACK }
     private Mode currentMode;
     private boolean posicaoPronta = false;
+    private String nome;
+   
 
-    public BatalhaNavalFacade() {
+    public String getNome() {
+		return this.nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public BatalhaNavalFacade() {
         this.batalhaNaval = new BatalhaNaval();
         this.currentMode = Mode.POSITIONING;
     }

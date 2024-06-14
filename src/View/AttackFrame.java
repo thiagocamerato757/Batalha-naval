@@ -37,7 +37,6 @@ public class AttackFrame extends JFrame {
     private JLabel statusLabel, turnLabel, blockedLabel;
     JButton unblock, start, hide;
     
-    
     protected boolean passaVez() {
         return !vezJogador;
     }
@@ -66,13 +65,13 @@ public class AttackFrame extends JFrame {
 	                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
 	                    panel.repaint();
 	                    if (playerWin(opponentShips2, 1)) {
-	                    	JOptionPane.showMessageDialog(AttackFrame.this, "Jogador 1 ganhou o jogo!!");
+	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador1 + " ganhou o jogo!!");
 	                    }
 	                } else {
 	                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
 	                    panel.repaint();
 	                    if (playerWin(opponentShips1, 1)) {
-	                    	JOptionPane.showMessageDialog(AttackFrame.this, "Jogador 2 ganhou o jogo!!");
+	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador2 + " ganhou o jogo!!");
 	                    }
 	                }
             	}
@@ -220,11 +219,11 @@ public class AttackFrame extends JFrame {
             drawBoard(g2d, right_x, down_y, blocked1);
             drawBoard(g2d, secondBoardXOffset, down_y, blocked2);
             if (vezJogador) {
-            	turnLabel.setText("É o turno de: Jogador 1"); //Lembrar de adicionar o nome do jogador
+            	turnLabel.setText("É o turno de: " + nomeJogador1); //Lembrar de adicionar o nome do jogador
             	drawShots(g2d, right_x, down_y, tiros1, blocked1);
             }
             else {
-            	turnLabel.setText("É o turno de: Jogador 2");
+            	turnLabel.setText("É o turno de: " + nomeJogador2);
             	drawShots(g2d, secondBoardXOffset, down_y, tiros2, blocked2);
             }
         }

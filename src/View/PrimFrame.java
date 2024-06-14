@@ -24,14 +24,19 @@ public class PrimFrame extends JFrame {
     public final int CELULA_SIZE = 30;
     public final int NUMERO_COLUNAS = 16;
     public final int NUMERO_LINHAS = 16;
-    String nomeJogador;
     private Point p;
     private BatalhaNavalFacade tabuleiro = new BatalhaNavalFacade();
     
     PrimPanel panel;
 
     public void setNomeJogador(String nomeJogador) {
-        this.nomeJogador = nomeJogador;
+        this.tabuleiro.setNome(nomeJogador);
+        System.out.println(nomeJogador);
+    }
+    
+    public String getNomeJogador() {
+    	return this.tabuleiro.getNome();
+        
     }
     
     public PrimFrame(String s) {
@@ -122,7 +127,7 @@ public class PrimFrame extends JFrame {
                         pendingShip = null;
                     }
                 }
-                panel.updateButtonState();
+                //panel.updateButtonState();
             }
         });
 
@@ -473,7 +478,7 @@ public class PrimFrame extends JFrame {
             Graphics2D g2d = (Graphics2D) g;
 
             g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
-            g2d.drawString(nomeJogador + " posicione suas armas", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
+            g2d.drawString(getNomeJogador() + " posicione suas armas", (LARG_DEFAULT / 2) - 50, ALT_DEFAULT - 200);
 
             b1.setBounds(LARG_DEFAULT / 2, ALT_DEFAULT - 180, 100, 30);
             add(b1);
