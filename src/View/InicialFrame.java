@@ -46,9 +46,9 @@ public class InicialFrame extends JFrame {
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Jogo game = new Jogo();
+                
                 InicialFrame.this.dispose();
-            }
+                Jogo.startNewGame();            }
         });
 
         setContentPane(panel);

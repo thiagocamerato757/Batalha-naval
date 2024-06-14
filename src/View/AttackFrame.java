@@ -1,6 +1,8 @@
 package View;
 
 import javax.swing.*;
+
+import Controller.Jogo;
 import Model.*;
 import View.PrimFrame.PrimPanel;
 import Model.BatalhaNaval;
@@ -66,12 +68,14 @@ public class AttackFrame extends JFrame {
 	                    panel.repaint();
 	                    if (playerWin(opponentShips2, 1)) {
 	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador1 + " ganhou o jogo!!");
+	                    	finishGame();
 	                    }
 	                } else {
 	                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
 	                    panel.repaint();
 	                    if (playerWin(opponentShips1, 1)) {
 	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador2 + " ganhou o jogo!!");
+	                    	finishGame();
 	                    }
 	                }
             	}
@@ -133,6 +137,17 @@ public class AttackFrame extends JFrame {
     		return true;
     	}
     	return false;
+    }
+    
+    private void finishGame() {
+    	int i = JOptionPane.showConfirmDialog(AttackFrame.this, "Deseja iniciar um novo jogo?", "Batalha Naval", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
+    	if (i == JOptionPane.YES_OPTION) {
+    		AttackFrame.this.dispose();
+    		Jogo.startNewGame();
+    	}
+    	else {
+    		AttackFrame.this.dispose();
+    	}
     }
 
     class AttackPanel extends JPanel {
