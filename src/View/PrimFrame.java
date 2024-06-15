@@ -7,7 +7,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import Model.Navio;
-import Model.BatalhaNaval;
 import Model.BatalhaNavalFacade;
 
 import java.util.List;
@@ -35,7 +34,6 @@ public class PrimFrame extends JFrame {
     
     public String getNomeJogador() {
     	return this.tabuleiro.getNome();
-        
     }
     
     public PrimFrame(String s) {
@@ -126,7 +124,7 @@ public class PrimFrame extends JFrame {
                         pendingShip = null;
                     }
                 }
-                panel.updateButtonState();
+                //panel.updateButtonState();
             }
         });
 
@@ -147,7 +145,7 @@ public class PrimFrame extends JFrame {
         List<Point> cells = new ArrayList<>();
 
         if (tamanho == 3 && ship.getShape() instanceof Path2D.Double) {
-            // HidroaviÃ£o
+            // Hidroavião
             switch (rotation) {
                 case 0: // Normal
                     cells.add(new Point((int) x, (int) y));
@@ -410,7 +408,7 @@ public class PrimFrame extends JFrame {
         	atk = AtkSingleton.getInstance();
             initShips();
             setLayout(null);
-            b1.setEnabled(false);
+            //b1.setEnabled(false);
             add(b1);
             b1.setBounds(LARG_DEFAULT / 2, ALT_DEFAULT - 180, 80, 30);
             b1.addActionListener(new ActionListener() {
@@ -419,7 +417,7 @@ public class PrimFrame extends JFrame {
                     troca.atualizaEstadoTab(tabuleiro, true);
                     atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
                     PrimFrame.this.dispose();
-                    if(TrocaContexto.getContProntos() == 2) {
+                    if(TrocaContexto.getContProntos() % 2 == 0) {
                         troca.trocaPraAtaque(); //troca para tela de ataque
                     }
                }

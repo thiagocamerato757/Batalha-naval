@@ -4,15 +4,12 @@ import javax.swing.*;
 
 import Controller.Jogo;
 import Model.*;
-import View.PrimFrame.PrimPanel;
-import Model.BatalhaNaval;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +32,7 @@ public class AttackFrame extends JFrame {
     private boolean vezJogador = true, blocked1 = true, blocked2 = true;
     Color shotColor = null;
     int max_tiros = 1;
-    String nomeJogador1, nomeJogador2;
+    private String nomeJogador1, nomeJogador2;
     private JLabel statusLabel, turnLabel, blockedLabel;
     JButton unblock, start, hide;
     
@@ -143,6 +140,7 @@ public class AttackFrame extends JFrame {
     	int i = JOptionPane.showConfirmDialog(AttackFrame.this, "Deseja iniciar um novo jogo?", "Batalha Naval", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
     	if (i == JOptionPane.YES_OPTION) {
     		AttackFrame.this.dispose();
+    		AtkSingleton.getInstance().resetInstance();
     		Jogo.startNewGame();
     	}
     	else {
@@ -234,11 +232,11 @@ public class AttackFrame extends JFrame {
             drawBoard(g2d, right_x, down_y, blocked1);
             drawBoard(g2d, secondBoardXOffset, down_y, blocked2);
             if (vezJogador) {
-            	turnLabel.setText("É o turno de: " + nomeJogador1); //Lembrar de adicionar o nome do jogador
+            	turnLabel.setText("É o turno de: " + AttackFrame.this.nomeJogador1);
             	drawShots(g2d, right_x, down_y, tiros1, blocked1);
             }
             else {
-            	turnLabel.setText("É o turno de: " + nomeJogador2);
+            	turnLabel.setText("É o turno de: " + AttackFrame.this.nomeJogador2);
             	drawShots(g2d, secondBoardXOffset, down_y, tiros2, blocked2);
             }
         }

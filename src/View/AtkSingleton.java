@@ -18,5 +18,9 @@ public class AtkSingleton { //faz com que a interface de ataque seja chamada ape
     public AttackFrame getTabuleiro() {
         return tabuleiro;
     }
+    
+    public void resetInstance() {
+    	instance = null;
+    }
 }
 

@@ -37,7 +37,6 @@ public class NomeForm {
         if (jogador2 == null || jogador2.isEmpty()) { //caso clique somente no ok o nome por padrão vai ser jogador 2
             jogador2 = "Jogador 2";
         }
-        
     }
 
     public static void main(String[] args) {

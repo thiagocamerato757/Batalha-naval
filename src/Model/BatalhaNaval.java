@@ -44,6 +44,7 @@ public class BatalhaNaval {
     protected int getQtd_tiros() {
 		return qtd_tiros;
 	}
+    
 	protected void setQtd_tiros(int qtd_tiros) {
 		this.qtd_tiros = qtd_tiros;
 	}
@@ -51,12 +52,15 @@ public class BatalhaNaval {
 	protected int getTAMANHO_TABULEIRO() {
 		return TAMANHO_TABULEIRO;
 	}
+	
 	protected int getNUM_NAVIOS() {
 		return NUM_NAVIOS;
 	}
+	
 	protected void setNaviosRestantes(int naviosRestantes) {
 		this.naviosRestantes = naviosRestantes;
 	}
+	
 	protected void exibirTabuleiro(int[][] tabuleiro) {
         for (int i = 0; i < BatalhaNaval.TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < BatalhaNaval.TAMANHO_TABULEIRO; j++) {
@@ -70,6 +74,7 @@ public class BatalhaNaval {
     protected static int getTamanhoTabuleiro() {
 		return TAMANHO_TABULEIRO;
 	}
+    
     protected void AtualizaTab_Pos(Navio navio) {
         int[][] tabuleiro = getTabuleiro();
         List<Point> coordenadas = navio.getCoordenadas();
@@ -163,6 +168,7 @@ public class BatalhaNaval {
 	protected int[][] getTabuleiro() {
 		return this.tabuleiro;
 	}
+	
 	protected int getNaviosRestantes() {
 		// TODO Auto-generated method stub
 		return this.naviosRestantes;

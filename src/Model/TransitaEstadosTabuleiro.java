@@ -12,6 +12,5 @@ public abstract class TransitaEstadosTabuleiro {
     public static int getContProntos() {
         return contProntos;
     }
-
     public abstract void trocaPraAtaque();
 }

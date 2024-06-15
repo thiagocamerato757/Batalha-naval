@@ -18,7 +18,7 @@ public class Navio {
     private int countRotation = 0;
     private double originalX, originalY;
     private boolean isSunk;
-
+ 
 	public boolean isSunk() {
 		return isSunk;
 	}

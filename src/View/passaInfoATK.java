@@ -2,7 +2,7 @@ package View;
 
 public class passaInfoATK {
 	protected void passaInfo(PrimFrame f, AttackFrame a) {
-		if(TrocaContexto.getContProntos() == 1) {
+		if(TrocaContexto.getContProntos() % 2 == 1) {
 			a.setOpponentShips1(f.getShips());
 			a.setNomeJogador1(f.getNomeJogador());
 		}
@@ -12,3 +12,4 @@ public class passaInfoATK {
 		}
 	}
 }
+ 

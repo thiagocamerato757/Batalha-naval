@@ -27,7 +27,7 @@ public class InicialFrame extends JFrame {
 
         loadGameButton = new JButton("Carregar Partida");
         loadGameButton.setBounds(200, 50, 130, 50);
-        panel.add(loadGameButton);
+        panel.add(loadGameButton); 
 
         fileChooser = new JFileChooser();
 
