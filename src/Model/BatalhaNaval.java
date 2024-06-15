@@ -64,17 +64,117 @@ public class BatalhaNaval {
 	protected void exibirTabuleiro(int[][] tabuleiro) {
         for (int i = 0; i < BatalhaNaval.TAMANHO_TABULEIRO; i++) {
             for (int j = 0; j < BatalhaNaval.TAMANHO_TABULEIRO; j++) {
-                //System.out.print(tabuleiro[i][j]);
+                System.out.print(tabuleiro[j][i] + " ");
             }
-            //System.out.println();
+            System.out.println();
         }
-        //System.out.println();
+        System.out.println();
     }
     
     protected static int getTamanhoTabuleiro() {
 		return TAMANHO_TABULEIRO;
 	}
-    
+    protected void contornaShip(Navio navio) {
+    	int[][] tabuleiro = getTabuleiro();
+    	int count = 0;
+        List<Point> coordenadas = navio.getCoordenadas();
+        for (Point coord : coordenadas) {
+            int x = (int) coord.getX();
+            int y = (int) coord.getY();
+            if((x-1 >= 0 && x + 1<= BatalhaNaval.TAMANHO_TABULEIRO )&& (y -1 >= 0 && y + 1 <= BatalhaNaval.TAMANHO_TABULEIRO) ) {
+            	if(navio.getTamanho() == 1) {
+            		tabuleiro[x][y-1] = -10;
+            		tabuleiro[x-1][y-1] = -10;
+            		tabuleiro [x+1][y-1] = -10;
+            		tabuleiro[x-1][y] = -10;
+            		tabuleiro [x+1][y] = -10;
+            		tabuleiro[x][y+1] = -10;
+            		tabuleiro[x+1][y+1] = -10;
+            		tabuleiro[x-1][y+1] = -10;
+            	}else if(navio.getTamanho() == 2) {
+            		if(count == 0) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x-1][y-1] = -10;
+            			tabuleiro[x-1][y] = -10;
+            			tabuleiro[x-1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 1) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x+1][y-1] = -10;
+            			tabuleiro[x+1][y] = -10;
+            			tabuleiro[x+1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}
+            	}else if(navio.getTamanho() == 3) {
+            		if(count == 0) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x-1][y-1] = -10;
+            			tabuleiro[x-1][y] = -10;
+            			tabuleiro[x-1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 1) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x-1][y-1] = -10;
+            			tabuleiro[x+1][y-1] = -10;
+            			tabuleiro[x][y+2] = -10;
+            		}else if(count == 2) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x+1][y-1] = -10;
+            			tabuleiro[x+1][y] = -10;
+            			tabuleiro[x+1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}
+            	}else if(navio.getTamanho() == 4) {
+            		if(count == 0) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x-1][y-1] = -10;
+            			tabuleiro[x-1][y] = -10;
+            			tabuleiro[x-1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 1) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 2) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 3) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x+1][y-1] = -10;
+            			tabuleiro[x+1][y] = -10;
+            			tabuleiro[x+1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}
+            	}else if(navio.getTamanho() == 5) {
+            		if(count == 0) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x-1][y-1] = -10;
+            			tabuleiro[x-1][y] = -10;
+            			tabuleiro[x-1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 1) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 2) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 3) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}else if(count == 4) {
+            			tabuleiro[x][y-1] = -10;
+            			tabuleiro[x+1][y-1] = -10;
+            			tabuleiro[x+1][y] = -10;
+            			tabuleiro[x+1][y+1] = -10;
+            			tabuleiro[x][y+1] = -10;
+            		}
+            	}
+            }else{
+         	   System.out.println("ai nao bct");
+            }
+            count ++;
+       }
+        exibirTabuleiro(tabuleiro);
+    }
     protected void AtualizaTab_Pos(Navio navio) {
         int[][] tabuleiro = getTabuleiro();
         List<Point> coordenadas = navio.getCoordenadas();
@@ -89,8 +189,10 @@ public class BatalhaNaval {
                 throw new ArrayIndexOutOfBoundsException("Coordenada fora dos limites: (" + x + ", " + y + ")");
             }
             
-            tabuleiro[x][y] = 1; // Supondo que 1 indica a presença de um navio
+            tabuleiro[x][y] = navio.getTamanho();
         }
+        contornaShip(navio);
+        //exibirTabuleiro(tabuleiro);
     }
 
     

@@ -106,7 +106,9 @@ public class PrimFrame extends JFrame {
                         cells = getShipCells(newX, newY, pendingShip);
                         Coordenadas coord = new Coordenadas(cells, panel.right_x, panel.down_y);
                         coord.coordenadaGraficaParaIndices(pendingShip); // envia as coords matriciais para a embarcacao
-                        notify.NotificaObserverTabu(tabuleiro, pendingShip);
+                        if(notify.NotificaObserverTabu(tabuleiro, pendingShip)) {
+                        	System.out.println("OKKKK");
+                        }
                         cells.clear();
                         pendingShip.setCor(originalColor); // Restore the original color
                         selectedShip = null;
