@@ -169,7 +169,7 @@ public class BatalhaNaval {
             		}
             	}
             }else{
-         	   System.out.println("ai nao bct");
+         	   System.out.println("ai nao bct"); // pelo amor de deus alguem troca isso
             }
             count ++;
        }
@@ -191,7 +191,7 @@ public class BatalhaNaval {
             
             tabuleiro[x][y] = navio.getTamanho();
         }
-        contornaShip(navio);
+        //contornaShip(navio);
         //exibirTabuleiro(tabuleiro);
     }
 

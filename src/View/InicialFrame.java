@@ -3,15 +3,22 @@ package View;
 import javax.swing.*;
 
 import Controller.Jogo;
+import Model.SalvarArquivo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class InicialFrame extends JFrame {
     private JButton newGameButton;
     private JButton loadGameButton;
     private JFileChooser fileChooser;
+    private SalvarArquivo saveFile;
+    
+    public void setSalvarArquivo(SalvarArquivo saveFile) {
+    	this.saveFile = saveFile;
+    }
 
     public InicialFrame() {
         setTitle("Batalha Naval - Menu Inicial");
@@ -34,11 +41,20 @@ public class InicialFrame extends JFrame {
         loadGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	InicialFrame.this.dispose();
+            	passaInfoATK passa = new passaInfoATK();
+            	AtkSingleton atk = AtkSingleton.getInstance();
+            	TrocaContexto troca = new TrocaContexto();
                 int returnValue = fileChooser.showOpenDialog(InicialFrame.this);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    // Aqui você pode processar o arquivo selecionado
-                    System.out.println("Arquivo selecionado: " + selectedFile.getAbsolutePath());
+                    try {
+						saveFile.readFile(selectedFile);
+						passa.recriaInfo(saveFile, atk.getTabuleiro());
+						troca.trocaPraAtaque();
+					} catch (IOException e1) {
+						System.out.println("Não foi possível ler o arquivo");
+					}
                 }
             }
         });
@@ -46,9 +62,9 @@ public class InicialFrame extends JFrame {
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
                 InicialFrame.this.dispose();
-                Jogo.startNewGame();            }
+                Jogo.startNewGame();            
+            }
         });
 
         setContentPane(panel);

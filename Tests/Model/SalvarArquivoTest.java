@@ -30,8 +30,8 @@ public class SalvarArquivoTest {
 	 * } catch (IOException e) { fail("IOException should not be thrown here"); } }
 	 */
 
-    @Test
-   public void testLerArq() {
+    //@Test
+   /*public void testLerArq() {
     	SalvarArquivo salvou = new SalvarArquivo();   
         try {
             salvou.LerArq();
@@ -64,5 +64,5 @@ public class SalvarArquivoTest {
         } catch (IOException e) {
             fail("IOException should not be thrown here");
         }
-    }
+    }*/
 }

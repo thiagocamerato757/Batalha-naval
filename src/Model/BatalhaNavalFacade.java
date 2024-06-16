@@ -40,32 +40,19 @@ public class BatalhaNavalFacade implements OrbservaTabuleiro {
          this.posicaoPronta = TF;
      }
 
-    public boolean placeShip(Navio navio) {
-    	int tabuleiro[][] = batalhaNaval.getTabuleiro();
-        if (currentMode == Mode.POSITIONING) {
-            batalhaNaval.addNavios(navio);
-            for(int i = 0 ; i < navio.getCoordenadas().size();i++) {
-            	if(navio.getCoordenadas().get(i).x < 0 || navio.getCoordenadas().get(i).x > batalhaNaval.getTAMANHO_TABULEIRO()|| navio.getCoordenadas().get(i).y < 0 || navio.getCoordenadas().get(i).y > batalhaNaval.getTAMANHO_TABULEIRO()) {
-            		return false;
-            	}
-            	else if(tabuleiro[navio.getCoordenadas().get(i).x][navio.getCoordenadas().get(i).y] != 0) {
-            		return false;
-            	}
-            	else if(tabuleiro[navio.getCoordenadas().get(i).x + 1][navio.getCoordenadas().get(i).y +1] != 0) {
-            		return false;
-            	}
-            }
-            batalhaNaval.AtualizaTab_Pos(navio);
-           // batalhaNaval.exibirTabuleiro(tabuleiro);
-            if (batalhaNaval.getNavios().size() == batalhaNaval.getNUM_NAVIOS()) {
-                setEstadoPos(true);
-            }
-            return true;
-        } else {
-            System.out.println("Você não pode posicionar navios no modo de ataque.");
-        }
-        return false;
-    }
+     public boolean placeShip(Navio navio) {
+         if (currentMode == Mode.POSITIONING) {
+             batalhaNaval.addNavios(navio);
+             batalhaNaval.AtualizaTab_Pos(navio);
+             if (batalhaNaval.getNavios().size() == batalhaNaval.getNUM_NAVIOS()) {
+                 setEstadoPos(true);
+             }
+             return true;
+         } else {
+             System.out.println("Você não pode posicionar navios no modo de ataque.");
+         }
+         return false;
+     }
 
     public void attack(int x, int y) {
         if (currentMode == Mode.ATTACK) {

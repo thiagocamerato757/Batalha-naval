@@ -7,6 +7,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import Model.Navio;
+import Model.SalvarArquivo;
 import Model.BatalhaNavalFacade;
 
 import java.util.List;
@@ -25,9 +26,14 @@ public class PrimFrame extends JFrame {
     public final int NUMERO_LINHAS = 16;
     private Point p;
     private BatalhaNavalFacade tabuleiro = new BatalhaNavalFacade();
+    SalvarArquivo saveFile;
     
     PrimPanel panel;
 
+    public void setSaveFile(SalvarArquivo saveFile) {
+    	this.saveFile = saveFile;
+    }
+    
     public void setNomeJogador(String nomeJogador) {
         this.tabuleiro.setNome(nomeJogador);
     }
@@ -106,9 +112,7 @@ public class PrimFrame extends JFrame {
                         cells = getShipCells(newX, newY, pendingShip);
                         Coordenadas coord = new Coordenadas(cells, panel.right_x, panel.down_y);
                         coord.coordenadaGraficaParaIndices(pendingShip); // envia as coords matriciais para a embarcacao
-                        if(notify.NotificaObserverTabu(tabuleiro, pendingShip)) {
-                        	System.out.println("OKKKK");
-                        }
+                        if(notify.NotificaObserverTabu(tabuleiro, pendingShip));
                         cells.clear();
                         pendingShip.setCor(originalColor); // Restore the original color
                         selectedShip = null;
@@ -417,11 +421,11 @@ public class PrimFrame extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     troca.atualizaEstadoTab(tabuleiro, true);
-                    atq.passaInfo(PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
+                    atq.passaInfo(saveFile,PrimFrame.this,atk.getTabuleiro()); //salva a lista de navios para a tela de ataque
                     PrimFrame.this.dispose();
-                    if(TrocaContexto.getContProntos() % 2 == 0) {
-                        troca.trocaPraAtaque(); //troca para tela de ataque
-                    }
+                    //if(TrocaContexto.getContProntos() % 2 == 0) {
+                        //troca.trocaPraAtaque(); //troca para tela de ataque
+                    //}
                }
             });
         }

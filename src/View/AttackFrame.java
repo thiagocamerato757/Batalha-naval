@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +37,15 @@ public class AttackFrame extends JFrame {
     private String nomeJogador1, nomeJogador2;
     private JLabel statusLabel, turnLabel, blockedLabel;
     JButton unblock, start, hide;
+    SalvarArquivo saveFile;
     
     protected boolean passaVez() {
         return !vezJogador;
     }
 
+    public void setSaveFile(SalvarArquivo saveFile) {
+    	this.saveFile = saveFile;
+    }
     public void setNomeJogador1(String nomeJogador1) {
         this.nomeJogador1 = nomeJogador1;
     }
@@ -48,12 +54,30 @@ public class AttackFrame extends JFrame {
         this.nomeJogador2 = nomeJogador2;
     }
     
-    public AttackFrame(String s) {
+    public Map<Point, Color> getTiros1() {
+		return tiros1;
+	}
+
+	public void setTiros1(Map<Point, Color> tiros1) {
+		this.tiros1 = tiros1;
+	}
+
+	public Map<Point, Color> getTiros2() {
+		return tiros2;
+	}
+
+	public void setTiros2(Map<Point, Color> tiros2) {
+		this.tiros2 = tiros2;
+	}
+
+	public AttackFrame(String s) {
         super(s);
+        
         setSize(d);
         panel = new AttackPanel();
         getContentPane().add(panel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         
         panel.addMouseListener(new MouseAdapter() {
             @Override
@@ -63,14 +87,14 @@ public class AttackFrame extends JFrame {
 	                if (vezJogador) {
 	                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
 	                    panel.repaint();
-	                    if (playerWin(opponentShips2, 1)) {
+	                    if (playerWin(opponentShips2, navios_restantes)) {
 	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador1 + " ganhou o jogo!!");
 	                    	finishGame();
 	                    }
 	                } else {
 	                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
 	                    panel.repaint();
-	                    if (playerWin(opponentShips1, 1)) {
+	                    if (playerWin(opponentShips1, navios_restantes)) {
 	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador2 + " ganhou o jogo!!");
 	                    	finishGame();
 	                    }
@@ -80,45 +104,52 @@ public class AttackFrame extends JFrame {
         });
     }
 
-    private void handleShot(Map<Point, Color> tiros, List<Navio> opponentShips, int boardXOffset, int boardYOffset, Point p) {
-        statusLabel.setVisible(true);
-    	int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
-        int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
-        Point coordTabu = new Point(col, row);
-        if (col >= 0 && col < NUMERO_COLUNAS - 1 && row >= 0 && row < NUMERO_LINHAS - 1 && tiros.get(coordTabu) == null && max_tiros<=3) {
-        	if (max_tiros == 3) {
-        		hide.setVisible(true);
-            }
-            boolean hit = false;
-            for (Navio ship : opponentShips) {
-                if (ship.getCoordenadas().contains(coordTabu)) {
-                    tiros.put(coordTabu, Color.GRAY);
-                    if (isShipSunk(ship.getCoordenadas(), tiros)) {
-                    	ship.setSunk(true);
-                        for (Point part : ship.getCoordenadas()) {
-                            tiros.put(part, Color.BLACK);
-                        }
-                        statusLabel.setText("Você afundou um " + ship.getTipo());
-                    } else {
-                        statusLabel.setText("Você atingiu um " + ship.getTipo());
-                    }
-                    hit = true;
-                    break;
-                }
-            }
-            if (!hit) {
-                tiros.put(coordTabu, Color.cyan.darker());
-                statusLabel.setText("Você atingiu a água");
-            }
-            max_tiros++;
-        }
-    }
+	private void handleShot(Map<Point, Color> tiros, List<Navio> opponentShips, int boardXOffset, int boardYOffset, Point p) {
+	    statusLabel.setVisible(true);
+	    int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
+	    int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
+	    Point coordTabu = new Point(col, row);
+	    if (col >= 0 && col < NUMERO_COLUNAS - 1 && row >= 0 && row < NUMERO_LINHAS - 1 && tiros.get(coordTabu) == null && max_tiros <= 3) {
+	        if (max_tiros == 3) {
+	            hide.setVisible(true);
+	        }
+	        boolean hit = false;
+	        for (Navio ship : opponentShips) {
+	        	
+	            if (ship.getCoordenadas().contains(coordTabu)) {
+	                tiros.put(coordTabu, Color.GRAY);
+	                if (isShipSunk(ship.getCoordenadas(), tiros)) {
+	                    ship.setSunk(true);
+	                    for (Point part : ship.getCoordenadas()) {
+	                        tiros.put(part, Color.BLACK);
+	                    }
+	                    
+	                    statusLabel.setText("Você afundou um " + ship.getTipo());
+	                } else {
+	                    statusLabel.setText("Você atingiu um " + ship.getTipo());
+	                }
+	                hit = true;
+	                System.out.println("ship" + ship.getCoordenadas());
+		        	System.out.println("tiros" + tiros);
+	                break;
+	                
+	            }
+	        }
+	        if (!hit) {
+	            tiros.put(coordTabu, Color.cyan.darker());
+	            statusLabel.setText("Você atingiu a água");
+	        }
+	        max_tiros++;
+	    }
+	}
+
 
     private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
         for (Point coord : shipCoords) {
             if (!shots.containsKey(coord) || shots.get(coord) != Color.GRAY) {
                 return false;
             }
+            
         }
         return true;
     }
@@ -223,6 +254,30 @@ public class AttackFrame extends JFrame {
             turnLabel.setBounds(LARG_DEFAULT / 2 - 120, 100, 400, 20);
             turnLabel.setFont(new Font("Arial", Font.BOLD, 18));
             add(turnLabel);
+            
+            JButton save = new JButton("Salvar e fechar");
+            setLayout(null);
+            save.setBounds(LARG_DEFAULT - 200, ALT_DEFAULT - 180, 150, 30);
+            add(save);
+            save.addActionListener(new ActionListener() {
+            	@Override
+            	public void actionPerformed(ActionEvent e) {
+            		try {
+            			saveFile.setShots1(tiros1);
+            			saveFile.setShots2(tiros2);
+            			JFileChooser fileChooser = new JFileChooser();
+            			int returnValue = fileChooser.showOpenDialog(AttackFrame.this);
+                        if (returnValue == JFileChooser.APPROVE_OPTION) {
+                            File selectedFile = fileChooser.getSelectedFile();
+                            saveFile.writeFile(selectedFile);
+                        }
+					} catch (IOException e1) {
+						System.out.println("Não foi possível salvar o jogo");
+					}
+            		AttackFrame.this.dispose();
+            		AtkSingleton.getInstance().resetInstance();
+            	}
+            });
         }
         
         @Override
@@ -294,16 +349,16 @@ public class AttackFrame extends JFrame {
         return opponentShips1;
     }
 
-    protected void setOpponentShips1(List<Navio> opponentShips1) {
-        this.opponentShips1 = opponentShips1;
+    protected void setOpponentShips2(List<Navio> opponentShips2) {
+        this.opponentShips2 = opponentShips2;
     }
 
     protected List<Navio> getOpponentShips2() {
         return opponentShips2;
     }
 
-    protected void setOpponentShips2(List<Navio> opponentShips2) {
-        this.opponentShips2 = opponentShips2;
+    protected void setOpponentShips1(List<Navio> opponentShips1) {
+        this.opponentShips1 = opponentShips1;
     }
 
     public static void main(String[] args) {
