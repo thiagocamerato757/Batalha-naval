@@ -18,7 +18,16 @@ public class Navio {
     private int countRotation = 0;
     private double originalX, originalY;
     private boolean isSunk;
- 
+    private List<ShipCoordinate> shipCoord;
+    
+    public void adicionarShipCoord(Point point) {
+    	shipCoord.add(new ShipCoordinate(point));
+    }
+
+    public List<ShipCoordinate> getShipCoord() {
+    	return shipCoord;
+    }
+    
 	public boolean isSunk() {
 		return isSunk;
 	}
@@ -44,6 +53,7 @@ public class Navio {
     }
     public Navio(int tam) {
         this.setTamanho(tam);
+        this.shipCoord = new ArrayList<>(tam);;
         setTipoNavio(this);
     }
 

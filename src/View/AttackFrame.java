@@ -146,7 +146,7 @@ public class AttackFrame extends JFrame {
 
     private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
         for (Point coord : shipCoords) {
-            if (!shots.containsKey(coord) || shots.get(coord) != Color.GRAY) {
+            if (!shots.containsKey(coord)) {
                 return false;
             }
             
