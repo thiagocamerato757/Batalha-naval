@@ -25,6 +25,10 @@ public class passaInfoATK {
 		a.setNomeJogador2(s.getNamePlayer2());
 		a.setTiros1(s.getShots1());
 		a.setTiros2(s.getShots2());
+		a.setNavios_restantes1(s.getNavios_restantes1());
+		a.setNavios_restantes2(s.getNavios_restantes2());
+		a.setMax_tiros(s.getMaxTiros());
+		a.setVezJogador(s.getVezJogador());
 		a.setSaveFile(s);
 	}
 }

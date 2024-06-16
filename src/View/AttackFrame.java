@@ -28,7 +28,8 @@ public class AttackFrame extends JFrame {
     public final int NUMERO_COLUNAS = 16;
     public final int NUMERO_LINHAS = 16;
     private BatalhaNavalFacade bat = new BatalhaNavalFacade();
-    private int navios_restantes = bat.getNaviosRestantes();
+    private int navios_restantes1 = bat.getNaviosRestantes();
+    private int navios_restantes2 = bat.getNaviosRestantes();
     AttackPanel panel;
     private Point p;
     private boolean vezJogador = true, blocked1 = true, blocked2 = true;
@@ -41,6 +42,10 @@ public class AttackFrame extends JFrame {
     
     protected boolean passaVez() {
         return !vezJogador;
+    }
+    
+    public void setVezJogador(boolean vezJogador) {
+    	this.vezJogador = vezJogador;
     }
 
     public void setSaveFile(SalvarArquivo saveFile) {
@@ -69,15 +74,27 @@ public class AttackFrame extends JFrame {
 	public void setTiros2(Map<Point, Color> tiros2) {
 		this.tiros2 = tiros2;
 	}
+	
+	public void setNavios_restantes1(int navios_restantes1) {
+		this.navios_restantes1 = navios_restantes1;
+	}
+
+	public void setNavios_restantes2(int navios_restantes2) {
+		this.navios_restantes2 = navios_restantes2;
+	}
+	
+	public void setMax_tiros(int max_tiros) {
+		this.max_tiros = max_tiros;
+	}
+
+	
 
 	public AttackFrame(String s) {
         super(s);
-        
         setSize(d);
         panel = new AttackPanel();
         getContentPane().add(panel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
         
         panel.addMouseListener(new MouseAdapter() {
             @Override
@@ -85,16 +102,16 @@ public class AttackFrame extends JFrame {
             	if (blocked1 == false || blocked2 == false) {
 	                p = e.getPoint();
 	                if (vezJogador) {
-	                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p);
+	                    handleShot(tiros1, opponentShips2, panel.right_x, panel.down_y, p, vezJogador);
 	                    panel.repaint();
-	                    if (playerWin(opponentShips2, navios_restantes)) {
+	                    if (playerWin(navios_restantes1)) {
 	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador1 + " ganhou o jogo!!");
 	                    	finishGame();
 	                    }
 	                } else {
-	                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p);
+	                    handleShot(tiros2, opponentShips1, panel.secondBoardXOffset, panel.down_y, p, vezJogador);
 	                    panel.repaint();
-	                    if (playerWin(opponentShips1, navios_restantes)) {
+	                    if (playerWin(navios_restantes2)) {
 	                    	JOptionPane.showMessageDialog(AttackFrame.this, nomeJogador2 + " ganhou o jogo!!");
 	                    	finishGame();
 	                    }
@@ -104,7 +121,7 @@ public class AttackFrame extends JFrame {
         });
     }
 
-	private void handleShot(Map<Point, Color> tiros, List<Navio> opponentShips, int boardXOffset, int boardYOffset, Point p) {
+	private void handleShot(Map<Point, Color> tiros, List<Navio> opponentShips, int boardXOffset, int boardYOffset, Point p, boolean vezJogador) {
 	    statusLabel.setVisible(true);
 	    int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
 	    int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
@@ -115,15 +132,19 @@ public class AttackFrame extends JFrame {
 	        }
 	        boolean hit = false;
 	        for (Navio ship : opponentShips) {
-	        	
 	            if (ship.getCoordenadas().contains(coordTabu)) {
 	                tiros.put(coordTabu, Color.GRAY);
 	                if (isShipSunk(ship.getCoordenadas(), tiros)) {
 	                    ship.setSunk(true);
+	                    if (vezJogador) {
+	                    	navios_restantes1--;
+	                    }
+	                    else {
+	                    	navios_restantes2--;
+	                    }
 	                    for (Point part : ship.getCoordenadas()) {
 	                        tiros.put(part, Color.BLACK);
 	                    }
-	                    
 	                    statusLabel.setText("Você afundou um " + ship.getTipo());
 	                } else {
 	                    statusLabel.setText("Você atingiu um " + ship.getTipo());
@@ -144,7 +165,9 @@ public class AttackFrame extends JFrame {
 	}
 
 
-    private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
+   
+
+	private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
         for (Point coord : shipCoords) {
             if (!shots.containsKey(coord)) {
                 return false;
@@ -154,12 +177,7 @@ public class AttackFrame extends JFrame {
         return true;
     }
     
-    private boolean playerWin(List<Navio> opponentShip, int num_navios) {
-    	for (Navio ship : opponentShip) {
-    		if (ship.isSunk()) {
-    			num_navios--;
-    		}
-    	}
+    private boolean playerWin(int num_navios) {
     	if (num_navios == 0) {
     		hide.setVisible(false);
     		return true;
@@ -170,8 +188,15 @@ public class AttackFrame extends JFrame {
     private void finishGame() {
     	int i = JOptionPane.showConfirmDialog(AttackFrame.this, "Deseja iniciar um novo jogo?", "Batalha Naval", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
     	if (i == JOptionPane.YES_OPTION) {
+    		tiros1.clear();
+    		tiros2.clear();
+    		opponentShips1.clear();
+    		opponentShips2.clear();
+    		navios_restantes1 = 15;
+    		navios_restantes2 = 15;
+    		max_tiros = 0;
+    		statusLabel.setVisible(false);
     		AttackFrame.this.dispose();
-    		AtkSingleton.getInstance().resetInstance();
     		Jogo.startNewGame();
     	}
     	else {
@@ -221,7 +246,13 @@ public class AttackFrame extends JFrame {
             	@Override
             	public void actionPerformed(ActionEvent e) {
             		start.setVisible(false);
-            		blocked1 = false;
+            	
+            		if (vezJogador) {
+            			blocked1 = false;
+            		}
+            		else {
+            			blocked2 = false;
+            		}
             		panel.repaint();
             	}
             });
@@ -265,11 +296,17 @@ public class AttackFrame extends JFrame {
             		try {
             			saveFile.setShots1(tiros1);
             			saveFile.setShots2(tiros2);
+            			saveFile.setNavios_restantes1(navios_restantes1);
+            			saveFile.setNavios_restantes2(navios_restantes2);
+            			saveFile.setMaxTiros(max_tiros);
             			JFileChooser fileChooser = new JFileChooser();
             			int returnValue = fileChooser.showOpenDialog(AttackFrame.this);
                         if (returnValue == JFileChooser.APPROVE_OPTION) {
                             File selectedFile = fileChooser.getSelectedFile();
                             saveFile.writeFile(selectedFile);
+                        }
+                        if (returnValue == JFileChooser.CANCEL_OPTION) {
+                        	return;
                         }
 					} catch (IOException e1) {
 						System.out.println("Não foi possível salvar o jogo");

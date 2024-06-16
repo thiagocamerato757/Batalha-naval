@@ -48,6 +48,8 @@ public class Jogo {
                       @Override
                       public void windowClosed(WindowEvent e) {
                           // Após fechar a segunda janela, abrir a AttackFrame
+                    	  //AtkSingleton atk = AtkSingleton.getInstance();
+                    	  //atk.resetInstance();
                     	  if(TrocaContexto.getContProntos() % 2 == 0) {
                               troca.trocaPraAtaque(); //troca para tela de ataque
                           }

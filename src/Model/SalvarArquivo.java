@@ -12,10 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import View.AtkSingleton;
-import View.TrocaContexto;
-import View.passaInfoATK;
-
 public class SalvarArquivo {
 	private File selectedFile;
 	private String namePlayer1;
@@ -24,13 +20,33 @@ public class SalvarArquivo {
 	private List<Navio> ships2 = new ArrayList<>();
 	private Map<Point, Color> shots1 = new HashMap<>();
 	private Map<Point, Color> shots2 = new HashMap<>();
-
+	private int navios_restantes1;
+	private int navios_restantes2;
+	private int max_tiros;
+	private boolean vezJogador;
+	
+	public void setMaxTiros(int max_tiros) {
+		this.max_tiros = max_tiros;
+	}
+	
+	public void setVezJogador(boolean vezJogador) {
+		this.vezJogador = vezJogador;
+	}
+	
 	public void setSelectedFile(File selectedFile) {
 		this.selectedFile = selectedFile;
 	}
 
 	public void setNamePlayer1(String namePlayer1) {
 		this.namePlayer1 = namePlayer1;
+	}
+	
+	public void setNavios_restantes1(int navios_restantes1) {
+		this.navios_restantes1 = navios_restantes1;
+	}
+
+	public void setNavios_restantes2(int navios_restantes2) {
+		this.navios_restantes2 = navios_restantes2;
 	}
 
 	public void setNamePlayer2(String namePlayer2) {
@@ -55,7 +71,13 @@ public class SalvarArquivo {
 
 	public void writeFile(File givenFile) throws IOException {
 		PrintWriter file = new PrintWriter(givenFile);
-
+		
+		if (vezJogador) {
+			file.println("1");
+		}
+		else {
+			file.println("2");
+		}
 		// Escreve os dados do jogador 1
 		file.println(namePlayer1);
 		file.println(ships1.size());
@@ -66,6 +88,7 @@ public class SalvarArquivo {
 			}
 			file.println();
 		}
+		file.println(navios_restantes1);
 		file.println(shots1.size());
 		for (Map.Entry<Point, Color> shot : shots1.entrySet()) {
 			Point point = shot.getKey();
@@ -82,11 +105,13 @@ public class SalvarArquivo {
 			}
 			file.println();
 		}
+		file.println(navios_restantes2);
 		file.println(shots2.size());
 		for (Map.Entry<Point, Color> shot : shots2.entrySet()) {
 			Point point = shot.getKey();
 			file.println(point.x + "," + point.y + " " + shot.getValue().getRGB());
 		}
+		file.println(max_tiros);
 
 		file.close();
 	}
@@ -95,7 +120,15 @@ public class SalvarArquivo {
 		BufferedReader file = new BufferedReader(new FileReader(givenFile));
 		String line;
 		Navio ship;
-
+		
+		String vez = file.readLine();
+		System.out.println(vez);
+		if (vez == "1") {
+			vezJogador = true;
+		}
+		else {
+			vezJogador = false;
+		}
 		// Leitura dos dados do jogador 1
 		namePlayer1 = file.readLine();
 		int shipCount1 = Integer.parseInt(file.readLine());
@@ -112,6 +145,8 @@ public class SalvarArquivo {
 			}
 			ships1.add(ship);
 		}
+		navios_restantes1 = Integer.parseInt(file.readLine());
+		System.out.println(navios_restantes1);
 		int shotCount1 = Integer.parseInt(file.readLine());
 		for (int i = 0; i < shotCount1; i++) {
 			line = file.readLine();
@@ -122,7 +157,6 @@ public class SalvarArquivo {
 			int rgb = Integer.parseInt(parts[1]);
 			shots1.put(new Point(x, y), new Color(rgb));
 		}
-		System.out.println("shots" + shots1);
 
 		// Leitura dos dados do jogador 2
 		namePlayer2 = file.readLine();
@@ -140,6 +174,7 @@ public class SalvarArquivo {
 			}
 			ships2.add(ship);
 		}
+		navios_restantes2 = Integer.parseInt(file.readLine());
 		int shotCount2 = Integer.parseInt(file.readLine());
 		for (int i = 0; i < shotCount2; i++) {
 			line = file.readLine();
@@ -150,6 +185,7 @@ public class SalvarArquivo {
 			int rgb = Integer.parseInt(parts[1]);
 			shots2.put(new Point(x, y), new Color(rgb));
 		}
+		max_tiros = Integer.parseInt(file.readLine());
 
 		file.close();
 	}
@@ -181,10 +217,21 @@ public class SalvarArquivo {
 	public Map<Point, Color> getShots2() {
 		return shots2;
 	}
+	
+	public int getNavios_restantes1() {
+		return navios_restantes1;
+	}
 
-	/*
-	 * public static void main(String[] args) throws IOException { SalvarArquivo
-	 * save = new SalvarArquivo(); save.readFile(); }
-	 */
-
+	public int getNavios_restantes2() {
+		return navios_restantes2;
+	}
+	
+	public int getMaxTiros() {
+		return max_tiros;
+	}
+	
+	public boolean getVezJogador() {
+		return vezJogador;
+	}
+	
 }
