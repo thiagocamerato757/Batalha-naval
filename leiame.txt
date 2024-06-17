@@ -1,0 +1,8 @@
+Integrantes:
+Ana Luiza Pinto Marques - 2211960
+Marcos Turo Fernandes Junior - 2211712
+Thiago Pereira Camerato - 2212580
+
+Classe com método main: Jogo.java (em Controller)
+
+Link para o vídeo: https://youtu.be/y1SdY1x0A9k

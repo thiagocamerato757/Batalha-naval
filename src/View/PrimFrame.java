@@ -129,19 +129,16 @@ public class PrimFrame extends JFrame {
 						if (tabuleiro.getNavios().size() == tabuleiro.getNumNavios()) {
 							tabuleiro.setEstadoPos(true);
 						}
-						System.out.println(pendingShip.getCor());
 						selectedShip = null;
 						pendingShip = null;
 						panel.repaint();
 					} else if (selectedShip != null && pendingShip == null) {
 						selectedShip.setCor(originalColor); // Restore the original color
-						System.out.println(pendingShip.getCor());
 						panel.repaint();
 						selectedShip = null;
 					} else {
 						selectedShip.restoreOriginalPosition();
 						selectedShip.setCor(originalColor); // Restore the original color
-						//System.out.println(pendingShip.getCor());
 						panel.repaint();
 						selectedShip = null;
 						pendingShip = null;
