@@ -3,5 +3,5 @@ import Model.Navio;
 import Model.OrbservaTabuleiro;
 
 public interface ObservadoTabuleiro {
-    public boolean NotificaObserverTabu(OrbservaTabuleiro obs,Navio ship);
+    public boolean NotificaObserverTabu(OrbservaTabuleiro obs,Navio ship,int col, int row);
 }

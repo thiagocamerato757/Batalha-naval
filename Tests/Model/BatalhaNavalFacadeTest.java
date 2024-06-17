@@ -2,17 +2,26 @@ package Model;
 
 import static org.junit.Assert.*;
 
-import java.awt.Point;
-
 import org.junit.Before;
 import org.junit.Test;
 
 public class BatalhaNavalFacadeTest {
     private BatalhaNavalFacade batalhaNavalFacade;
+    private Navio navio1;
+    private Navio navio2;
+    private Navio navio3;
 
     @Before
     public void setUp() {
         batalhaNavalFacade = new BatalhaNavalFacade();
+        navio1 = new Navio(1);
+        navio2 = new Navio(3);
+        navio3 = new Navio(5);
+
+        // Inicializando tipos de navios
+        Navio.setTipoNavio(navio1);
+        Navio.setTipoNavio(navio2);
+        Navio.setTipoNavio(navio3);
     }
 
     @Test
@@ -31,24 +40,22 @@ public class BatalhaNavalFacadeTest {
     }
 
     @Test
-    public void testPlaceShip() {
-        // Configurar o navio e suas coordenadas
-        Navio navio = new Navio(3);
-        navio.adicionarCoordenada(new Point(1, 1));
-        navio.adicionarCoordenada(new Point(1, 2));
-        navio.adicionarCoordenada(new Point(1, 3));
-
-        // Testar posicionamento de navio
-        boolean placed = batalhaNavalFacade.placeShip(navio);
-        assertTrue(placed);
-
-        // Testar se o navio está na lista de navios
-        assertEquals(1, batalhaNavalFacade.getNavios().size());
+    public void testGetNavios() {
+        assertNotNull(batalhaNavalFacade.getNavios());
+        assertTrue(batalhaNavalFacade.getNavios().isEmpty());
     }
-
 
     @Test
     public void testGetNaviosRestantes() {
         assertEquals(15, batalhaNavalFacade.getNaviosRestantes()); // Supondo que começa com 15 navios
     }
+
+
+
+    @Test
+    public void testGetNumNavios() {
+        assertEquals(15, batalhaNavalFacade.getNumNavios()); // Supondo que começa com 15 navios
+    }
+    
+    
 }

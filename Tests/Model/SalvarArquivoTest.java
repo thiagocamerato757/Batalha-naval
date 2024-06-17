@@ -1,68 +1,97 @@
 package Model;
 
+import static org.junit.Assert.*;
 
-import static org.junit.Assert.*; 
-import Model.BatalhaNaval;
-import Model.SalvarArquivo;
-
+import java.awt.Color;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class SalvarArquivoTest {
-	
-    //@Test
-	/*
-	 * public void testEscreverArq() { BatalhaNaval batalhanaval = new
-	 * BatalhaNaval(); try { String[] navi1 = {"A1", "B2", "C3", "D4", "E5"};
-	 * batalhanaval.setNavios1 (navi1); String[] tiro1 = {"A1", "B2", "C3"};
-	 * batalhanaval.setTiros1(tiro1); int qtd_tiro1 = 3;
-	 * batalhanaval.setQtd_tiros1(qtd_tiro1); String[] navi2 = {"F6", "G7", "H8",
-	 * "I9", "J10"}; batalhanaval.setNavios2(navi2); String[] tiro2 = {"F6", "G7",
-	 * "H8", "I9", "J10"}; batalhanaval.setTiros2(tiro2); int qtd_tiro2 = 5;
-	 * batalhanaval.setQtd_tiros2(qtd_tiro2);
-	 * 
-	 * SalvarArquivo salvaTest = new SalvarArquivo(); salvaTest.EscreverArq();
-	 * 
-	 * // Testa se o arquivo existe File file = new File("dados_partida.txt");
-	 * assertTrue(file.exists());
-	 * 
-	 * } catch (IOException e) { fail("IOException should not be thrown here"); } }
-	 */
+    private SalvarArquivo salvarArquivo;
+    private File tempFile;
 
-    //@Test
-   /*public void testLerArq() {
-    	SalvarArquivo salvou = new SalvarArquivo();   
-        try {
-            salvou.LerArq();
-            String[] navios1 = salvou.getNavios1();
-            String[] tiros1 = salvou.getTiros1();
-            String[] navios2 = salvou.getNavios2();
-            String[] tiros2 = salvou.getTiros2();
-            
-            // Assertions para verificar se o dado lido esta correto
-            assertEquals("A1", navios1[0]);
-            assertEquals("B2", navios1[1]);
-            assertEquals("C3", navios1[2]);
+    @Before
+    public void setUp() throws IOException {
+        salvarArquivo = new SalvarArquivo();
+        tempFile = File.createTempFile("test", ".txt");
+        tempFile.deleteOnExit();
+        
+        // Configuração dos dados do teste
+        salvarArquivo.setNamePlayer1("Player1");
+        salvarArquivo.setNamePlayer2("Player2");
+        
+        List<Navio> ships1 = new ArrayList<>();
+        Navio ship1 = new Navio(3);
+        ship1.adicionarCoordenada(new Point(1, 1));
+        ship1.adicionarCoordenada(new Point(1, 2));
+        ship1.adicionarCoordenada(new Point(1, 3));
+        ships1.add(ship1);
+        salvarArquivo.setShips1(ships1);
+        
+        List<Navio> ships2 = new ArrayList<>();
+        Navio ship2 = new Navio(2);
+        ship2.adicionarCoordenada(new Point(2, 2));
+        ship2.adicionarCoordenada(new Point(2, 3));
+        ships2.add(ship2);
+        salvarArquivo.setShips2(ships2);
+        
+        Map<Point, Color> shots1 = new HashMap<>();
+        shots1.put(new Point(1, 1), Color.RED);
+        salvarArquivo.setShots1(shots1);
+        
+        Map<Point, Color> shots2 = new HashMap<>();
+        shots2.put(new Point(2, 2), Color.BLUE);
+        salvarArquivo.setShots2(shots2);
+        
+        salvarArquivo.setNavios_restantes1(4);
+        salvarArquivo.setNavios_restantes2(3);
+        salvarArquivo.setMaxTiros(10);
+        salvarArquivo.setVezJogador(true);
+    }
 
-            assertEquals("F6", navios2[0]);
-            assertEquals("G7", navios2[1]);
-            assertEquals("H8", navios2[2]);
-            assertEquals("I9", navios2[3]);
-            assertEquals("J10", navios2[4]);
+    @After
+    public void tearDown() {
+        tempFile.delete();
+    }
 
-            assertEquals("A1", tiros1[0]);
-            assertEquals("B2", tiros1[1]);
-            assertEquals("C3", tiros1[2]);
+    @Test
+    public void testWriteAndReadFile() throws IOException {
+        // Teste de escrita
+        salvarArquivo.writeFile(tempFile);
 
-            assertEquals("F6", tiros2[0]);
-            assertEquals("G7", tiros2[1]);
-            assertEquals("H8", tiros2[2]);
-            assertEquals("I9", tiros2[3]);
-            assertEquals("J10", tiros2[4]);
+        // Criação de uma nova instância para leitura
+        SalvarArquivo loadedSalvarArquivo = new SalvarArquivo();
+        loadedSalvarArquivo.readFile(tempFile);
 
-        } catch (IOException e) {
-            fail("IOException should not be thrown here");
-        }
-    }*/
+        // Verificações dos dados lidos
+        assertEquals(salvarArquivo.getNamePlayer1(), loadedSalvarArquivo.getNamePlayer1());
+        assertEquals(salvarArquivo.getNamePlayer2(), loadedSalvarArquivo.getNamePlayer2());
+
+        assertEquals(salvarArquivo.getShips1().size(), loadedSalvarArquivo.getShips1().size());
+        assertEquals(salvarArquivo.getShips1().get(0).getCoordenadas(), loadedSalvarArquivo.getShips1().get(0).getCoordenadas());
+
+        assertEquals(salvarArquivo.getShips2().size(), loadedSalvarArquivo.getShips2().size());
+        assertEquals(salvarArquivo.getShips2().get(0).getCoordenadas(), loadedSalvarArquivo.getShips2().get(0).getCoordenadas());
+
+        assertEquals(salvarArquivo.getShots1().size(), loadedSalvarArquivo.getShots1().size());
+        assertEquals(salvarArquivo.getShots1().get(new Point(1, 1)), loadedSalvarArquivo.getShots1().get(new Point(1, 1)));
+
+        assertEquals(salvarArquivo.getShots2().size(), loadedSalvarArquivo.getShots2().size());
+        assertEquals(salvarArquivo.getShots2().get(new Point(2, 2)), loadedSalvarArquivo.getShots2().get(new Point(2, 2)));
+
+        assertEquals(salvarArquivo.getNavios_restantes1(), loadedSalvarArquivo.getNavios_restantes1());
+        assertEquals(salvarArquivo.getNavios_restantes2(), loadedSalvarArquivo.getNavios_restantes2());
+
+        assertEquals(salvarArquivo.getMaxTiros(), loadedSalvarArquivo.getMaxTiros());
+        assertEquals(salvarArquivo.getVezJogador(), loadedSalvarArquivo.getVezJogador());
+    }
 }

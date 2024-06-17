@@ -121,14 +121,13 @@ public class SalvarArquivo {
 		String line;
 		Navio ship;
 		
-		String vez = file.readLine();
-		System.out.println(vez);
-		if (vez == "1") {
-			vezJogador = true;
-		}
-		else {
-			vezJogador = false;
-		}
+		int vez = Integer.parseInt(file.readLine());
+        if (vez == 1) {
+            vezJogador = true;
+        }
+        else {
+            vezJogador = false;
+        }
 		// Leitura dos dados do jogador 1
 		namePlayer1 = file.readLine();
 		int shipCount1 = Integer.parseInt(file.readLine());

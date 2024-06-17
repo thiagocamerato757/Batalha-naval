@@ -34,7 +34,7 @@ public class AttackFrame extends JFrame {
     private Point p;
     private boolean vezJogador = true, blocked1 = true, blocked2 = true;
     Color shotColor = null;
-    int max_tiros = 1;
+    int max_tiros = 0;
     private String nomeJogador1, nomeJogador2;
     private JLabel statusLabel, turnLabel, blockedLabel;
     JButton unblock, start, hide;
@@ -87,8 +87,6 @@ public class AttackFrame extends JFrame {
 		this.max_tiros = max_tiros;
 	}
 
-	
-
 	public AttackFrame(String s) {
         super(s);
         setSize(d);
@@ -126,12 +124,14 @@ public class AttackFrame extends JFrame {
 	    int col = ((p.x - boardXOffset) / CELULA_SIZE) - 1;
 	    int row = ((p.y - boardYOffset) / CELULA_SIZE) - 1;
 	    Point coordTabu = new Point(col, row);
-	    if (col >= 0 && col < NUMERO_COLUNAS - 1 && row >= 0 && row < NUMERO_LINHAS - 1 && tiros.get(coordTabu) == null && max_tiros <= 3) {
-	        if (max_tiros == 3) {
+	    if (col >= 0 && col < NUMERO_COLUNAS - 1 && row >= 0 && row < NUMERO_LINHAS - 1 && tiros.get(coordTabu) == null && max_tiros <= 2) {
+	        if (max_tiros == 2) {
 	            hide.setVisible(true);
 	        }
 	        boolean hit = false;
 	        for (Navio ship : opponentShips) {
+	        	System.out.println("ship" + ship.getCoordenadas());
+	        	System.out.println("tiros" + tiros);
 	            if (ship.getCoordenadas().contains(coordTabu)) {
 	                tiros.put(coordTabu, Color.GRAY);
 	                if (isShipSunk(ship.getCoordenadas(), tiros)) {
@@ -150,8 +150,7 @@ public class AttackFrame extends JFrame {
 	                    statusLabel.setText("Você atingiu um " + ship.getTipo());
 	                }
 	                hit = true;
-	                System.out.println("ship" + ship.getCoordenadas());
-		        	System.out.println("tiros" + tiros);
+	                
 	                break;
 	                
 	            }
@@ -163,10 +162,7 @@ public class AttackFrame extends JFrame {
 	        max_tiros++;
 	    }
 	}
-
-
-   
-
+	
 	private boolean isShipSunk(List<Point> shipCoords, Map<Point, Color> shots) {
         for (Point coord : shipCoords) {
             if (!shots.containsKey(coord)) {
@@ -223,7 +219,6 @@ public class AttackFrame extends JFrame {
             unblock.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    vezJogador = passaVez();
                     if (vezJogador) {
                     	blocked1 = false;
                     	blocked2 = true;
@@ -232,7 +227,6 @@ public class AttackFrame extends JFrame {
                     	blocked1 = true;
                     	blocked2 = false;
                     }
-                    max_tiros = 1;
                     unblock.setVisible(false);
                     blockedLabel.setVisible(false);
                     panel.repaint();
@@ -246,17 +240,21 @@ public class AttackFrame extends JFrame {
             	@Override
             	public void actionPerformed(ActionEvent e) {
             		start.setVisible(false);
-            	
+            		if (max_tiros == 3) {
+            			hide.setVisible(true);
+            		}
             		if (vezJogador) {
             			blocked1 = false;
+                    	blocked2 = true;
             		}
             		else {
-            			blocked2 = false;
+            			blocked1 = true;
+                    	blocked2 = false;
             		}
             		panel.repaint();
             	}
             });
-
+            
             hide = new JButton("Próximo Jogador");
             setLayout(null);
             hide.setBounds(LARG_DEFAULT / 2 - 60, ALT_DEFAULT - 180, 150, 30);
@@ -265,6 +263,9 @@ public class AttackFrame extends JFrame {
             hide.addActionListener(new ActionListener() {
             	@Override
             	public void actionPerformed(ActionEvent e) {
+            		vezJogador = passaVez();
+            		
+            		max_tiros = 0;
             		blocked1 = true;
             		blocked2 = true;
             		hide.setVisible(false);
@@ -299,6 +300,7 @@ public class AttackFrame extends JFrame {
             			saveFile.setNavios_restantes1(navios_restantes1);
             			saveFile.setNavios_restantes2(navios_restantes2);
             			saveFile.setMaxTiros(max_tiros);
+            			saveFile.setVezJogador(vezJogador);
             			JFileChooser fileChooser = new JFileChooser();
             			int returnValue = fileChooser.showOpenDialog(AttackFrame.this);
                         if (returnValue == JFileChooser.APPROVE_OPTION) {
